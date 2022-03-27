@@ -6,11 +6,12 @@ import mapStyle from "./mapStyles";
 import basketballIcon from "../../assets/basketball.svg";
 import NewEventPrompt from "../NewEventPrompt/NewEventPrompt";
 import EventForm from "../EventForm/EventForm";
+import Header from "../Header/Header";
 
 const libraries = ["places"];
 const mapContainerStyle = {
-  width: "100vw",
-  height: "100vh",
+  width: "100%",
+  height: "100%",
 };
 const center = {
   lat: 43.653225,
@@ -38,10 +39,10 @@ function MapField() {
 
   const reset = () => {
     setFormActive(false);
-    setCurrentLat(null)
-    setCurrentLng(null)
-    setEventIcon("http://maps.google.com/mapfiles/ms/icons/red.png")
-    setNewEventActive(false)
+    setCurrentLat(null);
+    setCurrentLng(null);
+    setEventIcon("http://maps.google.com/mapfiles/ms/icons/red.png");
+    setNewEventActive(false);
   };
 
   const handlePrompt = (response) => {
@@ -86,52 +87,67 @@ function MapField() {
   if (!isLoaded) return "Loading Maps";
 
   return (
-    <div className="map-field">
-      {/* <h1>Close Around</h1>
+    <div className="wrapper">
+      <Header />
+      <div className="map-field">
+        {/* <h1>Close Around</h1>
       <h2 className="bottom"> Connecting you to your neighborhood</h2> */}
-      <GoogleMap mapContainerStyle={mapContainerStyle} zoom={12} center={center} options={options} onClick={onMapClick} onLoad={onMapLoad}>
-        {eventList.map((marker) => {
-          return <Marker key={uuidv4()} position={{ lat: marker.lat, lng: marker.lng }} icon={{url:marker.icon,anchor: new window.google.maps.Point(15, 15)}} onClick={()=>setSelected(marker)} />;
-        })}
+        <GoogleMap mapContainerStyle={mapContainerStyle} zoom={12} center={center} options={options} onClick={onMapClick} onLoad={onMapLoad}>
+          {eventList.map((marker) => {
+            return (
+              <Marker
+                key={uuidv4()}
+                position={{ lat: marker.lat, lng: marker.lng }}
+                icon={{ url: marker.icon, anchor: new window.google.maps.Point(15, 15) }}
+                onClick={() => setSelected(marker)}
+              />
+            );
+          })}
 
-        {currentLat && currentLng && (
-          <Marker
-            key={uuidv4()}
-            position={{ lat: currentLat, lng: currentLng }}
-            icon={{ url: eventIcon, 
-              scaledSize:new window.google.maps.Size(30,30),
-              origin: new window.google.maps.Point(0, 0), anchor: new window.google.maps.Point(15, 15) }}
-          />
-        )}
-        <button
-          className="map-field__button"
-          onClick={() => {
-            setNewEventActive((newEventActive) => !newEventActive);
-          }}
-        >
-          Add New Event
-        </button>
+          {currentLat && currentLng && (
+            <Marker
+              key={uuidv4()}
+              position={{ lat: currentLat, lng: currentLng }}
+              icon={{
+                url: eventIcon,
+                scaledSize: new window.google.maps.Size(30, 30),
+                origin: new window.google.maps.Point(0, 0),
+                anchor: new window.google.maps.Point(15, 15),
+              }}
+            />
+          )}
+          <button
+            className="map-field__button"
+            onClick={() => {
+              setNewEventActive((newEventActive) => !newEventActive);
+            }}
+          >
+            Add New Event
+          </button>
 
-        {newEventActive && <h4 className="map-field__question">Click where you want to add an event</h4>}
-        {newEventActive && currentLat && currentLng && <NewEventPrompt lat={currentLat} lng={currentLng} clickHandler={handlePrompt} />}
-        {formActive && (
-          <>
-            {" "}
-            <EventForm submitHandler={formSubmit} selectIcon={selectIcon} />
-          </>
-        )}
-        {selected ? <InfoWindow position={{lat:selected.lat,lng: selected.lng}}>
-        <div className="event-card">
-            <h2 className="event-card__heading">{selected.eventName}</h2>
-            <h3>Event Description</h3>
-            <p className="event-card__description">{selected.eventDescription}</p>
-            <h3 className="event-card__heading">When:</h3>
-            <p className="event-card__description">{selected.eventDate} </p>
-            <h3 className="event-card__heading">People Interested:</h3>
-            <p className="event-card__description">Me,Me and Me</p>
-          </div>
-          </InfoWindow> :null}
-      </GoogleMap>
+          {newEventActive && <h4 className="map-field__question">Click where you want to add an event</h4>}
+          {newEventActive && currentLat && currentLng && <NewEventPrompt lat={currentLat} lng={currentLng} clickHandler={handlePrompt} />}
+          {formActive && (
+            <>
+              {" "}
+              <EventForm submitHandler={formSubmit} selectIcon={selectIcon} />
+            </>
+          )}
+          {selected ? (
+            <InfoWindow position={{ lat: selected.lat, lng: selected.lng }}>
+              <div className="event-card">
+                <h2 className="event-card__heading">{selected.eventName}</h2>
+                <h3>Event Description</h3>
+                <p className="event-card__description">{selected.eventDescription}</p>
+                <h3 className="event-card__heading">When:</h3>
+                <p className="event-card__description">{selected.eventDate} </p>
+                <h3 className="event-card__heading">People Interested:</h3>
+                <p className="event-card__description">Me,Me and Me</p>
+              </div>
+            </InfoWindow>
+          ) : null}
+        </GoogleMap>
+      </div>
     </div>
   );
 }

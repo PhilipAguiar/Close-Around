@@ -15,15 +15,15 @@ export default [
       },
     ],
   },
-  {
-    featureType: "road",
-    elementType: "labels",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
+  // {
+  //   featureType: "road",
+  //   elementType: "labels",
+  //   stylers: [
+  //     {
+  //       visibility: "off",
+  //     },
+  //   ],
+  // },
 
   {
     featureType: "poi",
