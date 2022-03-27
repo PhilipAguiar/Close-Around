@@ -1,6 +1,6 @@
 import "./MapField.scss";
 import React, { useState } from "react";
-import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
+import { GoogleMap, useLoadScript, Marker, InfoWindow } from "@react-google-maps/api";
 import { v4 as uuidv4 } from "uuid";
 import mapStyle from "./mapStyles";
 import basketballIcon from "../../assets/basketball.svg";
@@ -28,16 +28,21 @@ function MapField() {
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries,
   });
-  const [marker, setMarker] = useState([]);
-  const [markerList, setMarkerList] = useState([])
+  const [selected, setSelected] = useState(null);
+  const [eventList, setEventList] = useState([]);
   const [newEventActive, setNewEventActive] = useState(false);
   const [formActive, setFormActive] = useState(false);
   const [currentLat, setCurrentLat] = useState(null);
   const [currentLng, setCurrentLng] = useState(null);
-  const [eventName, setEventName] = useState("");
-  const [eventDescription, setEventDescription] = useState("");
-  const [eventDate, setEventDate] = useState("");
   const [eventIcon, setEventIcon] = useState("http://maps.google.com/mapfiles/ms/icons/red.png");
+
+  const reset = () => {
+    setFormActive(false);
+    setCurrentLat(null)
+    setCurrentLng(null)
+    setEventIcon("http://maps.google.com/mapfiles/ms/icons/red.png")
+    setNewEventActive(false)
+  };
 
   const handlePrompt = (response) => {
     setNewEventActive(false);
@@ -49,21 +54,13 @@ function MapField() {
   const onMapClick = (e) => {
     setCurrentLat(e.latLng.lat());
     setCurrentLng(e.latLng.lng());
-
-    if (newEventActive) {
-      return setMarker({
-        lat: e.latLng.lat(),
-        lng: e.latLng.lng(),
-      });
-    }
   };
 
   const formSubmit = (e) => {
     e.preventDefault();
-    console.log(e);
 
-    setMarkerList((current) => [
-      ...current,
+    setEventList((prevList) => [
+      ...prevList,
       {
         lat: currentLat,
         lng: currentLng,
@@ -73,6 +70,8 @@ function MapField() {
         eventDate: e.target.date.value,
       },
     ]);
+
+    reset();
   };
 
   const selectIcon = (icon) => {
@@ -91,19 +90,17 @@ function MapField() {
       {/* <h1>Close Around</h1>
       <h2 className="bottom"> Connecting you to your neighborhood</h2> */}
       <GoogleMap mapContainerStyle={mapContainerStyle} zoom={12} center={center} options={options} onClick={onMapClick} onLoad={onMapLoad}>
-      {markerList.map((marker)=>{
-        <Marker
-        key={uuidv4()}
-        position={{ lat: marker.lat, lng: marker.lng }}
-        icon={marker.icon}
-      />
-      })}
+        {eventList.map((marker) => {
+          return <Marker key={uuidv4()} position={{ lat: marker.lat, lng: marker.lng }} icon={{url:marker.icon,anchor: new window.google.maps.Point(15, 15)}} onClick={()=>setSelected(marker)} />;
+        })}
 
         {currentLat && currentLng && (
           <Marker
             key={uuidv4()}
             position={{ lat: currentLat, lng: currentLng }}
-            icon={{ url: eventIcon, origin: new window.google.maps.Point(0, 0), anchor: new window.google.maps.Point(20, 10) }}
+            icon={{ url: eventIcon, 
+              scaledSize:new window.google.maps.Size(30,30),
+              origin: new window.google.maps.Point(0, 0), anchor: new window.google.maps.Point(15, 15) }}
           />
         )}
         <button
@@ -123,6 +120,17 @@ function MapField() {
             <EventForm submitHandler={formSubmit} selectIcon={selectIcon} />
           </>
         )}
+        {selected ? <InfoWindow position={{lat:selected.lat,lng: selected.lng}}>
+        <div className="event-card">
+            <h2 className="event-card__heading">{selected.eventName}</h2>
+            <h3>Event Description</h3>
+            <p className="event-card__description">{selected.eventDescription}</p>
+            <h3 className="event-card__heading">When:</h3>
+            <p className="event-card__description">{selected.eventDate} </p>
+            <h3 className="event-card__heading">People Interested:</h3>
+            <p className="event-card__description">Me,Me and Me</p>
+          </div>
+          </InfoWindow> :null}
       </GoogleMap>
     </div>
   );
