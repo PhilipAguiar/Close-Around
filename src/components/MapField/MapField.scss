@@ -1,0 +1,30 @@
+
+
+.map-field {
+  z-index: 1;
+  height: 10vh;
+  width: 100vw;
+
+  &__button {
+    background-color: aqua;
+    position: absolute;
+    bottom: 1rem;
+    left: 5%;
+    z-index: 100;
+    width: 10rem;
+  }
+
+  &__container {
+    position: absolute;
+    display: flex;
+    right: 1rem;
+    bottom: 1rem;
+    margin: auto;
+  }
+  &__question{
+    position: absolute;
+    bottom:3rem;
+    left:40%
+  }
+}
+

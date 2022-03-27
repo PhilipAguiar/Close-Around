@@ -1,0 +1,21 @@
+.event-form {
+  display: flex;
+  flex-direction: column;
+
+  margin: auto;
+  bottom: 1rem;
+  right: 1rem;
+  position: absolute;
+  background-color: rgb(245, 237, 237);
+  width: 40vw;
+  height: 60vh;
+
+  &__input {
+    width: 100%;
+  }
+
+  &__icon-container{
+    display: flex;
+    justify-content: space-around;
+  }
+}
