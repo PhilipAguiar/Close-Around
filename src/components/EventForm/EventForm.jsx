@@ -7,7 +7,7 @@ import personRemoveIcon from "../../assets/personRemove.svg";
 import plusOneIcon from "../../assets/plusOne.svg";
 import React from "react";
 
-function EventForm({ display, submitHandler, selectIcon }) {
+function EventForm({submitHandler, selectIcon}) {
   const clickHandler = (e) => {
     selectIcon(e.target.src);
   };
