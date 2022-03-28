@@ -7,11 +7,12 @@ import basketballIcon from "../../assets/basketball.svg";
 import NewEventPrompt from "../NewEventPrompt/NewEventPrompt";
 import EventForm from "../EventForm/EventForm";
 import Header from "../Header/Header";
+import InfoCard from "../InfoCard/InfoCard";
 
 const libraries = ["places"];
 const mapContainerStyle = {
-  width: "100%",
   height: "100%",
+  width: "100%",
 };
 const center = {
   lat: 43.653225,
@@ -87,9 +88,9 @@ function MapField() {
   if (!isLoaded) return "Loading Maps";
 
   return (
+      <div className="map-field">
     <div className="wrapper">
       <Header />
-      <div className="map-field">
         {/* <h1>Close Around</h1>
       <h2 className="bottom"> Connecting you to your neighborhood</h2> */}
         <GoogleMap mapContainerStyle={mapContainerStyle} zoom={12} center={center} options={options} onClick={onMapClick} onLoad={onMapLoad}>
@@ -134,17 +135,19 @@ function MapField() {
             </>
           )}
           {selected ? (
-            <InfoWindow position={{ lat: selected.lat, lng: selected.lng }}>
-              <div className="event-card">
-                <h2 className="event-card__heading">{selected.eventName}</h2>
-                <h3>Event Description</h3>
-                <p className="event-card__description">{selected.eventDescription}</p>
-                <h3 className="event-card__heading">When:</h3>
-                <p className="event-card__description">{selected.eventDate} </p>
-                <h3 className="event-card__heading">People Interested:</h3>
-                <p className="event-card__description">Me,Me and Me</p>
-              </div>
-            </InfoWindow>
+            <InfoCard event = {selected}
+            ></InfoCard>
+            // <InfoWindow position={{ lat: selected.lat, lng: selected.lng }}>
+            //   <div className="event-card">
+            //     <h2 className="event-card__heading">{selected.eventName}</h2>
+            //     <h3>Event Description</h3>
+            //     <p className="event-card__description">{selected.eventDescription}</p>
+            //     <h3 className="event-card__heading">When:</h3>
+            //     <p className="event-card__description">{selected.eventDate} </p>
+            //     <h3 className="event-card__heading">People Interested:</h3>
+            //     <p className="event-card__description">Me,Me and Me</p>
+            //   </div>
+            // </InfoWindow>
           ) : null}
         </GoogleMap>
       </div>
