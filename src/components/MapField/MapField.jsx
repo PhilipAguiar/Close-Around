@@ -1,5 +1,5 @@
 import "./MapField.scss";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GoogleMap, useLoadScript, Marker, InfoWindow } from "@react-google-maps/api";
 import { v4 as uuidv4 } from "uuid";
 import mapStyle from "./mapStyles";
@@ -8,6 +8,7 @@ import NewEventPrompt from "../NewEventPrompt/NewEventPrompt";
 import EventForm from "../EventForm/EventForm";
 import Header from "../Header/Header";
 import InfoCard from "../InfoCard/InfoCard";
+import TicketMasterApi from "../../utils/TicketMasterApi";
 
 const libraries = ["places"];
 const mapContainerStyle = {
@@ -37,6 +38,26 @@ function MapField() {
   const [currentLat, setCurrentLat] = useState(null);
   const [currentLng, setCurrentLng] = useState(null);
   const [eventIcon, setEventIcon] = useState("http://maps.google.com/mapfiles/ms/icons/red.png");
+
+  useEffect(()=>{
+
+TicketMasterApi.getEvent().then((res)=>{
+
+
+  setEventList((prevList) => [
+    ...prevList,
+    {
+      lat: Number(res.data._embedded.venues[0].location.latitude),
+      lng: Number(res.data._embedded.venues[0].location.longitude),
+      icon: res.data.images[0].url,
+      eventName: res.data.name,
+      eventDescription: res.data.promoter.name,
+      eventDate: res.data.dates.start.localDate,
+    },
+  ]);
+})
+
+  },[])
 
   const reset = () => {
     setFormActive(false);
@@ -99,7 +120,7 @@ function MapField() {
               <Marker
                 key={uuidv4()}
                 position={{ lat: marker.lat, lng: marker.lng }}
-                icon={{ url: marker.icon, anchor: new window.google.maps.Point(15, 15) }}
+                icon={{ url: marker.icon,scaledSize: new window.google.maps.Size(30, 30), anchor: new window.google.maps.Point(15, 15) }}
                 onClick={() => setSelected(marker)}
               />
             );
