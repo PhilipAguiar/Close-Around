@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 import { v4 as uuidv4 } from "uuid";
 import mapStyle from "./mapStyles";
-import basketballIcon from "../../assets/basketball.svg";
 import NewEventPrompt from "../NewEventPrompt/NewEventPrompt";
 import EventForm from "../EventForm/EventForm";
 import Header from "../Header/Header";
@@ -175,17 +174,7 @@ function MapField() {
           )}
           {selected ? (
             <InfoCard event={selected}></InfoCard>
-          ) : // <InfoWindow position={{ lat: selected.lat, lng: selected.lng }}>
-          //   <div className="event-card">
-          //     <h2 className="event-card__heading">{selected.eventName}</h2>
-          //     <h3>Event Description</h3>
-          //     <p className="event-card__description">{selected.eventDescription}</p>
-          //     <h3 className="event-card__heading">When:</h3>
-          //     <p className="event-card__description">{selected.eventDate} </p>
-          //     <h3 className="event-card__heading">People Interested:</h3>
-          //     <p className="event-card__description">Me,Me and Me</p>
-          //   </div>
-          // </InfoWindow>
+          ) :
           null}
         </GoogleMap>
       </div>

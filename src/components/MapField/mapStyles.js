@@ -26,6 +26,16 @@ export default [
   // },
 
   {
+    featureType: "administrative.neighborhood",
+    elementType: "labels",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "transit.station",
+    stylers: [{ visibility: "off" }],
+  },
+
+  {
     featureType: "poi",
     elementType: "labels",
     stylers: [
