@@ -1,6 +1,6 @@
 import axios from "axios";
 
 export default {
-  getVenues: () => axios.get(`http://localhost:8080/ticketmaster`),
+  getVenues: (lat,lng) => axios.get(`http://localhost:8080/ticketmaster?lat=${lat}&lng=${lng}`),
   getEventsByVenue: (venueId) =>axios.get(`http://localhost:8080/ticketmaster/${venueId}`)
 };
