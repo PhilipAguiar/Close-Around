@@ -8,6 +8,7 @@ const options = {
     borderRadius: "40px",
     backgroundColor: "navajowhite",
     padding: "15px",
+    
   },
   
   maxWidth: "1000px",

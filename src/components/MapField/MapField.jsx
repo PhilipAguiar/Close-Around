@@ -58,7 +58,7 @@ function MapField() {
 
     TicketMasterApi.getVenues(userLat, userLng).then((res) => {
       res.data.forEach((venue) => {
-        apiRequestDelay += 350;
+        apiRequestDelay += 500;
 
         setTimeout(
           () =>
@@ -175,7 +175,7 @@ function MapField() {
       <h2 className="bottom"> Connecting you to your neighborhood</h2> */}
           <GoogleMap mapContainerStyle={mapContainerStyle} zoom={13} center={center} options={options} onClick={onMapClick} onLoad={onMapLoad}>
             {eventList.map((marker) => {
-              console.log(userLat);
+            
               let lat = marker.lat;
               let lng = marker.lng;
 

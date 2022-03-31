@@ -1,8 +1,9 @@
 .event-form {
   display: flex;
   flex-direction: column;
-
-  margin: auto;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  border-radius: 40px;
+  padding: 1rem;
   bottom: 1rem;
   right: 1rem;
   position: absolute;
@@ -11,11 +12,24 @@
   height: 60vh;
 
   &__input {
+    height: 1.3rem;
+    padding: .2rem 0;
     width: 100%;
+    // padding: 0;
+  }
+
+  &__text-area{
+    height: 40%;
+    resize: none;
   }
 
   &__icon-container{
     display: flex;
     justify-content: space-around;
+  }
+
+  &__button{
+    width: 100%;
+    padding: 0;
   }
 }

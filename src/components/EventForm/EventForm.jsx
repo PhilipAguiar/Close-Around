@@ -18,7 +18,7 @@ function EventForm({submitHandler, selectIcon}) {
         <label>Event Name</label>
         <input className="event-form__input" name="event" />
         <label>Description</label>
-        <input className="event-form__input" name="description" />
+        <textarea className="event-form__text-area" name="description" />
         <label>When</label>
         <input className="event-form__input" name="date" />
         <div className="event-form__icon-container">
@@ -29,7 +29,7 @@ function EventForm({submitHandler, selectIcon}) {
           <img src={personRemoveIcon} onClick={clickHandler} className="event-form__icon" alt="basketball" />
           <img src={plusOneIcon} onClick={clickHandler} className="event-form__icon" alt="basketball" />
         </div>
-        <button>Submit</button>
+        <button className="event-form__button">Submit</button>
       </form>
     </>
   );
