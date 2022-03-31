@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "./Home.scss";
 
 function Home() {
+
   return (
     <div className="home">
       <div className="home__background"></div>
@@ -11,6 +12,8 @@ function Home() {
       <h3>Check whats close around!</h3>
       <Link to="/map">Here</Link>
       </div>
+
+      
     </div>
   );
 }
