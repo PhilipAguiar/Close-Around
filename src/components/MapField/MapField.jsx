@@ -48,6 +48,7 @@ function MapField() {
 
   useEffect(() => {
     getTicketMasterEvents();
+    getUserEvents();
   }, []);
 
   const getLocation = async () => {
@@ -71,9 +72,7 @@ function MapField() {
                 TicketMasterApiUtils.getEventsByVenue(venue.id)
                   .then((res) => {
                     res.data._embedded.events.forEach((event, i) => {
-                      console.log(res.data._embedded.events)
                       delay(() => {
-                        console.log("first");
                         let eventLat = Number(event._embedded.venues[0].location.latitude) + (Math.random() - 0.5) / 1500;
                         let eventLng = Number(event._embedded.venues[0].location.longitude) + (Math.random() - 0.5) / 1500;
 
@@ -97,6 +96,24 @@ function MapField() {
       apiRequestDelay
     );
   };
+
+  const getUserEvents = () =>{
+   
+    userEventUtils.getUserEvents().then(res=>
+      res.data.forEach((event) => {
+        console.log(event)
+        setEventList((prevList) => [...prevList, {
+          lat: event.lat,
+          lng: event.lng,
+          icon: event.icon,
+          eventName: event.eventName,
+          eventDescription: event.eventDescription,
+          eventDate: event.eventDate,
+        }])
+    
+      })
+    )
+  }
 
   const reset = () => {
     setNewEventActive((newEventActive) => (newEventActive = false));
@@ -159,17 +176,18 @@ function MapField() {
   const formSubmit = (e) => {
     e.preventDefault();
 
-    setEventList((prevList) => [
-      ...prevList,
-      {
-        lat: currentLat,
-        lng: currentLng,
-        icon: eventIcon,
-        eventName: e.target.event.value,
-        eventDescription: e.target.description.value,
-        eventDate: e.target.date.value,
-      },
-    ]);
+    const newEvent = {
+      lat: currentLat,
+      lng: currentLng,
+      icon: eventIcon,
+      eventName: e.target.event.value,
+      eventDescription: e.target.description.value,
+      eventDate: e.target.date.value,
+    };
+
+    userEventUtils.addUserEvent(newEvent);
+
+    setEventList((prevList) => [...prevList, newEvent]);
 
     reset();
   };
@@ -223,6 +241,8 @@ function MapField() {
                 />
               );
             })}
+
+            {/* {getUserEvents()} */}
 
             {currentLat && currentLng && (
               <Marker
