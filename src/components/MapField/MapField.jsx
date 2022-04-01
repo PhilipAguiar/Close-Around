@@ -7,8 +7,10 @@ import NewEventPrompt from "../NewEventPrompt/NewEventPrompt";
 import EventForm from "../EventForm/EventForm";
 import Header from "../Header/Header";
 import InfoCard from "../InfoCard/InfoCard";
-import TicketMasterApi from "../../utils/TicketMasterApi";
+import TicketMasterApiUtils from "../../utils/TicketMasterApi";
+import userEventUtils from "../../utils/UserEvents";
 import FetchLocationModule from "../FetchLocationModule/FetchLocationModule";
+import { delay } from "lodash";
 
 const libraries = ["places"];
 const mapContainerStyle = {
@@ -23,14 +25,13 @@ const options = {
 };
 
 function MapField() {
-
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries,
   });
 
-  let testLat=  JSON.parse(localStorage.getItem('lat'));
-  let testLng=  JSON.parse(localStorage.getItem('lng'));
+  let testLat = JSON.parse(localStorage.getItem("lat"));
+  let testLng = JSON.parse(localStorage.getItem("lng"));
 
   const [userLat, setUserLat] = useState(testLat);
   const [userLng, setUserLng] = useState(testLng);
@@ -46,54 +47,55 @@ function MapField() {
   const [eventIcon, setEventIcon] = useState("http://maps.google.com/mapfiles/ms/icons/red.png");
 
   useEffect(() => {
-    // navigator.geolocation.getCurrentPosition(function (position) {
-    //   setUserLat(position.coords.latitude);
-    //   setCurrentLng(position.coords.longitude);
-    // });
+    getTicketMasterEvents();
   }, []);
 
   const getLocation = async () => {
     await navigator.geolocation.getCurrentPosition((position) => {
-      localStorage.setItem("lat",JSON.stringify(position.coords.latitude))
-      localStorage.setItem("lng",JSON.stringify(position.coords.longitude))
+      localStorage.setItem("lat", JSON.stringify(position.coords.latitude));
+      localStorage.setItem("lng", JSON.stringify(position.coords.longitude));
     });
   };
 
   const getTicketMasterEvents = () => {
-    console.log("why")
-    let apiRequestDelay = 350;
+    let apiRequestDelay = 1000;
+    delay(
+      () =>
+        TicketMasterApiUtils.getVenues(userLat, userLng).then((res) => {
+          apiRequestDelay += 1000;
+          res.data.forEach((venue) => {
+            apiRequestDelay += 1000;
 
-    TicketMasterApi.getVenues(userLat, userLng).then((res) => {
-      res.data.forEach((venue) => {
-        apiRequestDelay += 1000;
+            delay(
+              () =>
+                TicketMasterApiUtils.getEventsByVenue(venue.id)
+                  .then((res) => {
+                    res.data._embedded.events.forEach((event, i) => {
+                      console.log(res.data._embedded.events)
+                      delay(() => {
+                        console.log("first");
+                        let eventLat = Number(event._embedded.venues[0].location.latitude) + (Math.random() - 0.5) / 1500;
+                        let eventLng = Number(event._embedded.venues[0].location.longitude) + (Math.random() - 0.5) / 1500;
 
-        setTimeout(
-          () =>
-            TicketMasterApi.getEventsByVenue(venue.id)
-              .then((res) => {
-                res.data._embedded.events.forEach((event) => {
-                  let eventLat = Number(event._embedded.venues[0].location.latitude);
-                  let eventLng = Number(event._embedded.venues[0].location.longitude);
-
-                  // console.log("1", eventLat, eventLng);
-
-                  const newEvent = {
-                    lat: eventLat,
-                    lng: eventLng,
-                    icon: event.images[0].url,
-                    eventName: event.name,
-                    eventDescription: event.url,
-                    eventDate: event.dates.start.localDate,
-                  };
-
-                  setEventList((prevList) => [...prevList, newEvent]);
-                });
-              })
-              .catch((e) => console.log(e)),
-          apiRequestDelay
-        );
-      });
-    });
+                        const newEvent = {
+                          lat: eventLat,
+                          lng: eventLng,
+                          icon: event.images[0].url,
+                          eventName: event.name,
+                          eventDescription: event.url,
+                          eventDate: event.dates.start.localDate,
+                        };
+                        setEventList((prevList) => [...prevList, newEvent]);
+                      }, 1000 * i);
+                    });
+                  })
+                  .catch((e) => console.log(e)),
+              apiRequestDelay
+            );
+          });
+        }),
+      apiRequestDelay
+    );
   };
 
   const reset = () => {
@@ -122,12 +124,36 @@ function MapField() {
     let output = false;
     eventList.forEach((event) => {
       if (event.lat === lat && event.lng === lng) {
-        // console.log("first")
-
         output = true;
       }
     });
     return output;
+  };
+  const cleanEvents = () => {
+    let newArray = [];
+
+    eventList.forEach((event, i) => {
+      if (i === 1) {
+        newArray.push(event);
+        console.log(newArray);
+        return;
+      }
+      newArray.forEach((newEvent) => {
+        if (newEvent.lat === event.lat && newEvent.lng === event.lng) {
+          newArray.push({
+            lat: event.lat + (Math.random() - 0.5) / 1500,
+            lng: event.lng + (Math.random() - 0.5) / 1500,
+            icon: event.icon,
+            eventName: event.eventName,
+            eventDescription: event.eventDescription,
+            eventDate: event.eventDate,
+          });
+        } else {
+          newArray.push(event);
+        }
+      });
+    });
+    setEventList(newArray);
   };
 
   const formSubmit = (e) => {
@@ -171,14 +197,8 @@ function MapField() {
     setNewEventActive(true);
   };
 
-
   if (!testLat || !testLng) {
     return <FetchLocationModule clickHandler={getLocation}> getTicketMasterEvents={getTicketMasterEvents}</FetchLocationModule>;
-  }
-
-  if (eventList.length === 0) {
-    console.log("s")
-    getTicketMasterEvents();
   }
 
   return (
@@ -190,23 +210,15 @@ function MapField() {
       <h2 className="bottom"> Connecting you to your neighborhood</h2> */}
           <GoogleMap mapContainerStyle={mapContainerStyle} zoom={12} center={center} options={options} onClick={onMapClick} onLoad={onMapLoad}>
             {eventList.map((marker) => {
-              let lat = marker.lat;
-              let lng = marker.lng;
-
-              if (checkIfOverlap(lat, lng)) {
-                lat = lat + (Math.random() - 0.5) / 1500;
-                lng = lng + (Math.random() - 0.5) / 1500;
-              }
-
               return (
                 <Marker
                   key={uuidv4()}
-                  position={{ lat: lat, lng: lng }}
+                  position={{ lat: marker.lat, lng: marker.lng }}
                   icon={{ url: marker.icon, scaledSize: new window.google.maps.Size(30, 30), anchor: new window.google.maps.Point(15, 15) }}
                   onClick={() => {
-                    setUserLat(marker.lat)
-                    setUserLng(marker.llg)
-                     setSelected(marker);
+                    setUserLat(marker.lat);
+                    setUserLng(marker.lng);
+                    setSelected(marker);
                   }}
                 />
               );

@@ -1,5 +1,5 @@
 import React from "react";
-import { InfoBox, InfoWindow } from "@react-google-maps/api";
+import { InfoBox} from "@react-google-maps/api";
 import "./InfoCard.scss";
 
 const options = {
@@ -8,9 +8,8 @@ const options = {
     borderRadius: "40px",
     backgroundColor: "navajowhite",
     padding: "15px",
-    disableAutoPan: "true"
+    
   },
-  disableAutoPan: "true",
   maxWidth: "1000px",
 };
 
