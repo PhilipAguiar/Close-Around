@@ -23,15 +23,23 @@ const options = {
 };
 
 function MapField() {
+
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries,
   });
-  const [userLat, setUserLat] = useState(null);
-  const [userLng, setUserLng] = useState(null);
+
+  let testLat=  JSON.parse(localStorage.getItem('lat'));
+  let testLng=  JSON.parse(localStorage.getItem('lng'));
+
+  const [userLat, setUserLat] = useState(testLat);
+  const [userLng, setUserLng] = useState(testLng);
+  const [newUserLat, setNewUserLat] = useState(null);
+  const [newUserLng, setNewUserLng] = useState(null);
   const [selected, setSelected] = useState(null);
   const [eventList, setEventList] = useState([]);
   const [newEventActive, setNewEventActive] = useState(false);
+  const [newLocationActive, setNewLocationActive] = useState(false);
   const [formActive, setFormActive] = useState(false);
   const [currentLat, setCurrentLat] = useState(null);
   const [currentLng, setCurrentLng] = useState(null);
@@ -45,20 +53,19 @@ function MapField() {
   }, []);
 
   const getLocation = async () => {
-    await navigator.geolocation
-      .getCurrentPosition((position) => {
-        setUserLat(position.coords.latitude);
-        setUserLng(position.coords.longitude);
-      })
-    
+    await navigator.geolocation.getCurrentPosition((position) => {
+      localStorage.setItem("lat",JSON.stringify(position.coords.latitude))
+      localStorage.setItem("lng",JSON.stringify(position.coords.longitude))
+    });
   };
 
   const getTicketMasterEvents = () => {
+    console.log("why")
     let apiRequestDelay = 350;
 
     TicketMasterApi.getVenues(userLat, userLng).then((res) => {
       res.data.forEach((venue) => {
-        apiRequestDelay += 500;
+        apiRequestDelay += 1000;
 
         setTimeout(
           () =>
@@ -90,11 +97,11 @@ function MapField() {
   };
 
   const reset = () => {
+    setNewEventActive((newEventActive) => (newEventActive = false));
     setFormActive(false);
     setCurrentLat(null);
     setCurrentLng(null);
     setEventIcon("http://maps.google.com/mapfiles/ms/icons/red.png");
-    setNewEventActive(false);
   };
 
   const handlePrompt = (response) => {
@@ -157,25 +164,32 @@ function MapField() {
     lng: userLng,
   };
 
-  if (!userLat || !userLng) {
-    
-    return  <FetchLocationModule clickHandler={getLocation}> getTicketMasterEvents={getTicketMasterEvents}</FetchLocationModule>
+  const changeUserLocation = () => {};
+
+  const promptLocationChange = () => {
+    reset();
+    setNewEventActive(true);
+  };
+
+
+  if (!testLat || !testLng) {
+    return <FetchLocationModule clickHandler={getLocation}> getTicketMasterEvents={getTicketMasterEvents}</FetchLocationModule>;
   }
 
-  if(eventList.length===0){
+  if (eventList.length === 0) {
+    console.log("s")
     getTicketMasterEvents();
   }
 
   return (
     <div className="map-field">
-      { (
+      {
         <div className="wrapper">
-          <Header />
+          <Header clickHandler={promptLocationChange} />
           {/* <h1>Close Around</h1>
       <h2 className="bottom"> Connecting you to your neighborhood</h2> */}
-          <GoogleMap mapContainerStyle={mapContainerStyle} zoom={13} center={center} options={options} onClick={onMapClick} onLoad={onMapLoad}>
+          <GoogleMap mapContainerStyle={mapContainerStyle} zoom={12} center={center} options={options} onClick={onMapClick} onLoad={onMapLoad}>
             {eventList.map((marker) => {
-            
               let lat = marker.lat;
               let lng = marker.lng;
 
@@ -189,7 +203,11 @@ function MapField() {
                   key={uuidv4()}
                   position={{ lat: lat, lng: lng }}
                   icon={{ url: marker.icon, scaledSize: new window.google.maps.Size(30, 30), anchor: new window.google.maps.Point(15, 15) }}
-                  onClick={() => setSelected(marker)}
+                  onClick={() => {
+                    setUserLat(marker.lat)
+                    setUserLng(marker.llg)
+                     setSelected(marker);
+                  }}
                 />
               );
             })}
@@ -215,7 +233,7 @@ function MapField() {
               Add New Event
             </button>
 
-            {newEventActive && <h4 className="map-field__question">Click where you want to add an event</h4>}
+            {newEventActive ? <h4 className="map-field__question">Click where you want to add an event</h4> : null}
             {newEventActive && currentLat && currentLng && <NewEventPrompt lat={currentLat} lng={currentLng} clickHandler={handlePrompt} />}
             {formActive && (
               <>
@@ -226,7 +244,7 @@ function MapField() {
             {selected ? <InfoCard event={selected}></InfoCard> : null}
           </GoogleMap>
         </div>
-      )}
+      }
     </div>
   );
 }

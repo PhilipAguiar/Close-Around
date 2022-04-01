@@ -1,5 +1,5 @@
 import React from "react";
-import { InfoBox } from "@react-google-maps/api";
+import { InfoBox, InfoWindow } from "@react-google-maps/api";
 import "./InfoCard.scss";
 
 const options = {
@@ -8,15 +8,15 @@ const options = {
     borderRadius: "40px",
     backgroundColor: "navajowhite",
     padding: "15px",
-    
+    disableAutoPan: "true"
   },
-  
+  disableAutoPan: "true",
   maxWidth: "1000px",
 };
 
 function InfoCard({ event }) {
   return (
-    <InfoBox position={{ lat: event.lat, lng: event.lng }} options={options}>
+    <InfoBox position={{ lat: event.lat, lng: event.lng }} defaultOptions={{ disableAutoPan: true }} options={options}>
       <div className="event-card">
         <h2 className="event-card__heading">{event.eventName}</h2>
         <h3>Event Description</h3>
