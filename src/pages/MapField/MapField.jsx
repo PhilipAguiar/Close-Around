@@ -3,14 +3,15 @@ import React, { useEffect, useState } from "react";
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 import { v4 as uuidv4 } from "uuid";
 import mapStyle from "./mapStyles";
-import NewEventPrompt from "../NewEventPrompt/NewEventPrompt";
-import EventForm from "../EventForm/EventForm";
-import Header from "../Header/Header";
-import InfoCard from "../InfoCard/InfoCard";
+import NewEventPrompt from "../../components/NewEventPrompt/NewEventPrompt";
+import EventForm from "../../components/EventForm/EventForm";
+import Header from "../../components/Header/Header";
+import InfoCard from "../../components/InfoCard/InfoCard";
 import TicketMasterApiUtils from "../../utils/TicketMasterApi";
 import userEventUtils from "../../utils/UserEvents";
-import FetchLocationModule from "../FetchLocationModule/FetchLocationModule";
-import { delay } from "lodash";
+import FetchLocationModule from "../../components/FetchLocationModule/FetchLocationModule";
+import { delay, find } from "lodash";
+import { useAuth } from "../../contexts/AuthContext";
 
 const libraries = ["places"];
 const mapContainerStyle = {
@@ -45,10 +46,12 @@ function MapField() {
   const [currentLat, setCurrentLat] = useState(null);
   const [currentLng, setCurrentLng] = useState(null);
   const [eventIcon, setEventIcon] = useState("http://maps.google.com/mapfiles/ms/icons/red.png");
+  const { currentUser } = useAuth();
 
   useEffect(() => {
     getTicketMasterEvents();
     getUserEvents();
+    console.log(currentUser);
   }, []);
 
   const getLocation = async () => {
@@ -77,12 +80,15 @@ function MapField() {
                         let eventLng = Number(event._embedded.venues[0].location.longitude) + (Math.random() - 0.5) / 1500;
 
                         const newEvent = {
+                          id: uuidv4(),
                           lat: eventLat,
                           lng: eventLng,
                           icon: event.images[0].url,
                           eventName: event.name,
                           eventDescription: event.url,
                           eventDate: event.dates.start.localDate,
+                          userSubmitted: "TicketMaster",
+                          usersInterested: [],
                         };
                         setEventList((prevList) => [...prevList, newEvent]);
                       }, 1000 * i);
@@ -97,23 +103,29 @@ function MapField() {
     );
   };
 
-  const getUserEvents = () =>{
-   
-    userEventUtils.getUserEvents().then(res=>
+  const getUserEvents = () => {
+    userEventUtils.getUserEvents().then((res) =>
       res.data.forEach((event) => {
-        console.log(event)
-        setEventList((prevList) => [...prevList, {
-          lat: event.lat,
-          lng: event.lng,
-          icon: event.icon,
-          eventName: event.eventName,
-          eventDescription: event.eventDescription,
-          eventDate: event.eventDate,
-        }])
-    
+        console.log(event);
+        setEventList((prevList) => [
+          ...prevList,
+          {
+            id: event.id,
+            lat: event.lat,
+            lng: event.lng,
+            icon: event.icon,
+            eventName: event.eventName,
+            eventDescription: event.eventDescription,
+            eventDate: event.eventDate,
+            userSubmitted: currentUser.displayName,
+            userAvatar: currentUser.photoURL,
+            eventSize: 1,
+            usersInterested: [],
+          },
+        ]);
       })
-    )
-  }
+    );
+  };
 
   const reset = () => {
     setNewEventActive((newEventActive) => (newEventActive = false));
@@ -135,54 +147,34 @@ function MapField() {
       setCurrentLat(e.latLng.lat());
       setCurrentLng(e.latLng.lng());
     }
+    setSelected(null);
   };
 
-  const checkIfOverlap = (lat, lng) => {
-    let output = false;
-    eventList.forEach((event) => {
-      if (event.lat === lat && event.lng === lng) {
-        output = true;
-      }
-    });
-    return output;
-  };
-  const cleanEvents = () => {
-    let newArray = [];
-
-    eventList.forEach((event, i) => {
-      if (i === 1) {
-        newArray.push(event);
-        console.log(newArray);
-        return;
-      }
-      newArray.forEach((newEvent) => {
-        if (newEvent.lat === event.lat && newEvent.lng === event.lng) {
-          newArray.push({
-            lat: event.lat + (Math.random() - 0.5) / 1500,
-            lng: event.lng + (Math.random() - 0.5) / 1500,
-            icon: event.icon,
-            eventName: event.eventName,
-            eventDescription: event.eventDescription,
-            eventDate: event.eventDate,
-          });
-        } else {
-          newArray.push(event);
-        }
-      });
-    });
-    setEventList(newArray);
-  };
+  // const checkIfOverlap = (lat, lng) => {
+  //   let output = false;
+  //   eventList.forEach((event) => {
+  //     if (event.lat === lat && event.lng === lng) {
+  //       output = true;
+  //     }
+  //   });
+  //   return output;
+  // };
 
   const formSubmit = (e) => {
     e.preventDefault();
 
     const newEvent = {
+      id: uuidv4(),
       lat: currentLat,
       lng: currentLng,
       icon: eventIcon,
       eventName: e.target.event.value,
       eventDescription: e.target.description.value,
       eventDate: e.target.date.value,
+      userSubmitted: currentUser.displayName,
+      userAvatar: currentUser.photoURL,
+      eventSize: 1,
+      usersInterested: [],
     };
 
     userEventUtils.addUserEvent(newEvent);
@@ -207,8 +199,32 @@ function MapField() {
     lat: userLat,
     lng: userLng,
   };
+  const joinEvent = (e, currentEvent) => {
+    e.preventDefault();
+    const copy = [...eventList];
+    const index = copy.findIndex((event) => currentEvent.id === event.id);
+    let newUsersInterested;
+    if (
+      currentEvent.usersInterested.find((user) => {
+        return user.id === currentUser.uid;
+      })
+    ) {
+      const index = currentEvent.usersInterested.findIndex((user) => user.id === currentUser.uid);
+      newUsersInterested = [copy[index].usersInterested.splice(index, index + 1)];
+      console.log(copy[index].usersInterested + "2");
+      console.log(newUsersInterested);
+    } else {
+      newUsersInterested = [...copy[index].usersInterested, { name: currentUser.displayName, id: currentUser.uid }];
+    }
 
-  const changeUserLocation = () => {};
+    copy[index] = {
+      ...copy[index],
+      usersInterested: newUsersInterested,
+    };
+
+    setEventList(copy);
+    setSelected(copy[index]);
+  };
 
   const promptLocationChange = () => {
     reset();
@@ -269,11 +285,10 @@ function MapField() {
             {newEventActive && currentLat && currentLng && <NewEventPrompt lat={currentLat} lng={currentLng} clickHandler={handlePrompt} />}
             {formActive && (
               <>
-                {" "}
                 <EventForm submitHandler={formSubmit} selectIcon={selectIcon} />
               </>
             )}
-            {selected ? <InfoCard event={selected}></InfoCard> : null}
+            {selected ? <InfoCard event={selected} clickHandler={joinEvent}></InfoCard> : null}
           </GoogleMap>
         </div>
       }

@@ -1,24 +1,18 @@
 import React, { useState } from "react";
 import { useRef } from "react";
-import { Link, useHistory } from "react-router-dom/cjs/react-router-dom.min"
+import { Link, useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { useAuth } from "../../contexts/AuthContext";
-import {getAuth,signInWithPopup,FacebookAuthProvider} from "firebase/auth"
-
-
+import { getAuth, signInWithPopup, FacebookAuthProvider } from "firebase/auth";
 
 function SignUp() {
   const emailRef = useRef();
   const passwordRef = useRef();
   const confirmRef = useRef();
-  const { signup, currentUser } = useAuth();
+  const { signup } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const history = useHistory()
-
-
-
-
- 
+  const history = useHistory();
+  const { currentUser } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,28 +22,33 @@ function SignUp() {
     }
 
     try {
-      await signup(emailRef.current.value, passwordRef.current.value);
       setError("");
       setLoading(true);
+      await signup(emailRef.current.value, passwordRef.current.value);
     } catch {
       setError("failed to create account");
+    }
+    if (currentUser) {
+      currentUser.updateProfile({
+        displayName: "hello",
+      });
+    
     }
     setLoading(false);
   };
 
-  const facebookSignup = ()=>{
-
+  const facebookSignup = () => {
     const auth = getAuth();
     const provider = new FacebookAuthProvider();
     signInWithPopup(auth, provider)
       .then((result) => {
         // The signed-in user info.
         const user = result.user;
-    
+
         // This gives you a Facebook Access Token. You can use it to access the Facebook API.
         const credential = FacebookAuthProvider.credentialFromResult(result);
         const accessToken = credential.accessToken;
-        history.push("/map")
+        history.push("/map");
         // ...
       })
       .catch((error) => {
@@ -60,10 +59,10 @@ function SignUp() {
         const email = error.email;
         // The AuthCredential type that was used.
         const credential = FacebookAuthProvider.credentialFromError(error);
-    
+
         // ...
       });
-  }
+  };
 
   return (
     <>
@@ -77,7 +76,9 @@ function SignUp() {
         <input type="password" name="confirm" ref={confirmRef} />
         <button disabled={loading}>Sign Up</button>
       </form>
-      <button disabled={loading} onClick={facebookSignup}>Sign Up With Facebook</button>
+      <button disabled={loading} onClick={facebookSignup}>
+        Sign Up With Facebook
+      </button>
       <div>
         Have an account? <Link to={"/login"}> Please log in!</Link>
       </div>

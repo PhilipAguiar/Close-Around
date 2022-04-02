@@ -1,6 +1,7 @@
 import React from "react";
-import { InfoBox} from "@react-google-maps/api";
+import { InfoBox } from "@react-google-maps/api";
 import "./InfoCard.scss";
+import { useAuth } from "../../contexts/AuthContext";
 
 const options = {
   boxStyle: {
@@ -8,22 +9,28 @@ const options = {
     borderRadius: "40px",
     backgroundColor: "navajowhite",
     padding: "15px",
-    
   },
   maxWidth: "1000px",
 };
 
-function InfoCard({ event }) {
+function InfoCard({ event, clickHandler }) {
+  const { currentUser } = useAuth();
   return (
     <InfoBox position={{ lat: event.lat, lng: event.lng }} defaultOptions={{ disableAutoPan: true }} options={options}>
       <div className="event-card">
         <h2 className="event-card__heading">{event.eventName}</h2>
+        <h1>{event.userSubmitted}</h1>
         <h3>Event Description</h3>
         <p className="event-card__description">{event.eventDescription}</p>
         <h3 className="event-card__heading">When:</h3>
         <p className="event-card__description">{event.eventDate} </p>
-        <h3 className="event-card__heading">People Interested:</h3>
-        <p className="event-card__description">Me,Me and Me</p>
+        <h3 className="event-card__heading">Event Size</h3>
+        <p className="event-card__description">{event.eventSize}</p>
+        <h3 className="event-card__description">People Interested</h3>
+        {event.usersInterested.map((person) => {
+          return <p>{person.name}</p>
+        })}
+        {currentUser ? <button onClick={(e) => clickHandler(e, event)}>Join the event</button> : <p>Sign in to join the event</p>}
       </div>
     </InfoBox>
   );

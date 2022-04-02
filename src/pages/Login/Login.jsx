@@ -16,7 +16,6 @@ function Login() {
   
 
     try {
-      console.log("first");
       setError("");
       setLoading(true);
       await login(emailRef.current.value, passwordRef.current.value);
