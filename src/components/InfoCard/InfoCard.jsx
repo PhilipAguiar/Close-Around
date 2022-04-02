@@ -20,15 +20,22 @@ function InfoCard({ event, clickHandler }) {
       <div className="event-card">
         <h2 className="event-card__heading">{event.eventName}</h2>
         <h1>{event.userSubmitted}</h1>
+        <img className="event-card__user-image" src={event.userAvatar}/>
         <h3>Event Description</h3>
         <p className="event-card__description">{event.eventDescription}</p>
         <h3 className="event-card__heading">When:</h3>
         <p className="event-card__description">{event.eventDate} </p>
         <h3 className="event-card__heading">Event Size</h3>
-        <p className="event-card__description">{event.eventSize}</p>
+        <p className="event-card__description">{event.usersInterested.length + "/" +event.eventSize}</p>
         <h3 className="event-card__description">People Interested</h3>
-        {event.usersInterested.map((person) => {
-          return <p>{person.name}</p>
+        {event.usersInterested.map((user) => {
+          return (
+            <div>
+              <p>{user.name}</p>
+              {user.userAvatar ? <img className="event-card__user-image" src={user.userAvatar} alt="" /> : null}
+              
+            </div>
+          );
         })}
         {currentUser ? <button onClick={(e) => clickHandler(e, event)}>Join the event</button> : <p>Sign in to join the event</p>}
       </div>

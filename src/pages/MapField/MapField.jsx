@@ -51,7 +51,6 @@ function MapField() {
   useEffect(() => {
     getTicketMasterEvents();
     getUserEvents();
-    console.log(currentUser);
   }, []);
 
   const getLocation = async () => {
@@ -106,7 +105,6 @@ function MapField() {
   const getUserEvents = () => {
     userEventUtils.getUserEvents().then((res) =>
       res.data.forEach((event) => {
-        console.log(event);
         setEventList((prevList) => [
           ...prevList,
           {
@@ -120,7 +118,7 @@ function MapField() {
             userSubmitted: currentUser.displayName,
             userAvatar: currentUser.photoURL,
             eventSize: 1,
-            usersInterested: [],
+            usersInterested: event.usersInterested,
           },
         ]);
       })
@@ -150,16 +148,6 @@ function MapField() {
     setSelected(null);
   };
 
-  // const checkIfOverlap = (lat, lng) => {
-  //   let output = false;
-  //   eventList.forEach((event) => {
-  //     if (event.lat === lat && event.lng === lng) {
-  //       output = true;
-  //     }
-  //   });
-  //   return output;
-  // };
-
   const formSubmit = (e) => {
     e.preventDefault();
 
@@ -176,7 +164,6 @@ function MapField() {
       eventSize: 1,
       usersInterested: [],
     };
-
     userEventUtils.addUserEvent(newEvent);
 
     setEventList((prevList) => [...prevList, newEvent]);
@@ -211,17 +198,17 @@ function MapField() {
     ) {
       const index = currentEvent.usersInterested.findIndex((user) => user.id === currentUser.uid);
       newUsersInterested = [copy[index].usersInterested.splice(index, index + 1)];
-      console.log(copy[index].usersInterested + "2");
-      console.log(newUsersInterested);
+
     } else {
-      newUsersInterested = [...copy[index].usersInterested, { name: currentUser.displayName, id: currentUser.uid }];
+      newUsersInterested = [...copy[index].usersInterested, { name: currentUser.displayName, id: currentUser.uid, userAvatar: currentUser.photoURL }];
     }
 
     copy[index] = {
       ...copy[index],
       usersInterested: newUsersInterested,
     };
-
+    console.log(copy[index])
+    userEventUtils.editUserEvent(copy[index])
     setEventList(copy);
     setSelected(copy[index]);
   };
@@ -243,16 +230,16 @@ function MapField() {
           {/* <h1>Close Around</h1>
       <h2 className="bottom"> Connecting you to your neighborhood</h2> */}
           <GoogleMap mapContainerStyle={mapContainerStyle} zoom={12} center={center} options={options} onClick={onMapClick} onLoad={onMapLoad}>
-            {eventList.map((marker) => {
+            {eventList.map((event) => {
               return (
                 <Marker
                   key={uuidv4()}
-                  position={{ lat: marker.lat, lng: marker.lng }}
-                  icon={{ url: marker.icon, scaledSize: new window.google.maps.Size(30, 30), anchor: new window.google.maps.Point(15, 15) }}
+                  position={{ lat: event.lat, lng: event.lng }}
+                  icon={{ url: event.icon, scaledSize: new window.google.maps.Size(30, 30), anchor: new window.google.maps.Point(15, 15) }}
                   onClick={() => {
-                    setUserLat(marker.lat);
-                    setUserLng(marker.lng);
-                    setSelected(marker);
+                    setUserLat(event.lat - 0.1);
+                    setUserLng(event.lng + 0.05);
+                    setSelected(event);
                   }}
                 />
               );

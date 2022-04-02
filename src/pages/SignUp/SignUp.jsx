@@ -32,7 +32,6 @@ function SignUp() {
       currentUser.updateProfile({
         displayName: "hello",
       });
-    
     }
     setLoading(false);
   };
@@ -49,7 +48,10 @@ function SignUp() {
         const credential = FacebookAuthProvider.credentialFromResult(result);
         const accessToken = credential.accessToken;
         history.push("/map");
-        // ...
+        const photoUrl = user.photoURL + "?height=500&access_token=" + accessToken;
+        console.log(photoUrl)
+        currentUser.updateProfile({ photoURL: photoUrl });
+        console.log(currentUser.photoURL)
       })
       .catch((error) => {
         // Handle Errors here.
