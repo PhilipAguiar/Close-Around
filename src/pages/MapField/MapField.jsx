@@ -10,8 +10,9 @@ import InfoCard from "../../components/InfoCard/InfoCard";
 import TicketMasterApiUtils from "../../utils/TicketMasterApi";
 import userEventUtils from "../../utils/UserEvents";
 import FetchLocationModule from "../../components/FetchLocationModule/FetchLocationModule";
-import { delay, find } from "lodash";
+import { delay } from "lodash";
 import { useAuth } from "../../contexts/AuthContext";
+import NewLocationPrompt from "../../components/NewLocationPrompt/NewLocationPrompt";
 
 const libraries = ["places"];
 const mapContainerStyle = {
@@ -36,8 +37,7 @@ function MapField() {
 
   const [userLat, setUserLat] = useState(testLat);
   const [userLng, setUserLng] = useState(testLng);
-  const [newUserLat, setNewUserLat] = useState(null);
-  const [newUserLng, setNewUserLng] = useState(null);
+  const [zoom, setZoom] = useState(12);
   const [selected, setSelected] = useState(null);
   const [eventList, setEventList] = useState([]);
   const [newEventActive, setNewEventActive] = useState(false);
@@ -77,19 +77,26 @@ function MapField() {
                       delay(() => {
                         let eventLat = Number(event._embedded.venues[0].location.latitude) + (Math.random() - 0.5) / 1500;
                         let eventLng = Number(event._embedded.venues[0].location.longitude) + (Math.random() - 0.5) / 1500;
-
+                        console.log(event);
                         const newEvent = {
-                          id: uuidv4(),
+                          id: event.id,
                           lat: eventLat,
                           lng: eventLng,
-                          icon: event.images[0].url,
+                          icon: "http://localhost:8080/images/ticketmaster-logo.png",
                           eventName: event.name,
                           eventDescription: event.url,
                           eventDate: event.dates.start.localDate,
                           userSubmitted: "TicketMaster",
                           usersInterested: [],
                         };
-                        setEventList((prevList) => [...prevList, newEvent]);
+
+                        if (
+                          !eventList.find((prevEvent) => {
+                            return prevEvent.id === event.name;
+                          })
+                        ) {
+                          setEventList((prevList) => [...prevList, newEvent]);
+                        }
                       }, 1000 * i);
                     });
                   })
@@ -126,6 +133,7 @@ function MapField() {
   };
 
   const reset = () => {
+    setNewLocationActive(false);
     setNewEventActive((newEventActive) => (newEventActive = false));
     setFormActive(false);
     setCurrentLat(null);
@@ -141,7 +149,7 @@ function MapField() {
   };
 
   const onMapClick = (e) => {
-    if (newEventActive) {
+    if (newEventActive || newLocationActive) {
       setCurrentLat(e.latLng.lat());
       setCurrentLng(e.latLng.lng());
     }
@@ -198,7 +206,6 @@ function MapField() {
     ) {
       const index = currentEvent.usersInterested.findIndex((user) => user.id === currentUser.uid);
       newUsersInterested = [copy[index].usersInterested.splice(index, index + 1)];
-
     } else {
       newUsersInterested = [...copy[index].usersInterested, { name: currentUser.displayName, id: currentUser.uid, userAvatar: currentUser.photoURL }];
     }
@@ -207,16 +214,26 @@ function MapField() {
       ...copy[index],
       usersInterested: newUsersInterested,
     };
-    console.log(copy[index])
-    userEventUtils.editUserEvent(copy[index])
+    console.log(copy[index]);
+    userEventUtils.editUserEvent(copy[index]);
     setEventList(copy);
     setSelected(copy[index]);
   };
 
   const promptLocationChange = () => {
     reset();
-    setNewEventActive(true);
+    setNewLocationActive(true);
   };
+
+  const changeLocation = (response) => {
+    setNewLocationActive(false);
+    if (response === true) {
+      setUserLat(currentLat);
+      setUserLng(currentLng);
+      getTicketMasterEvents();
+    }
+  };
+
 
   if (!testLat || !testLng) {
     return <FetchLocationModule clickHandler={getLocation}> getTicketMasterEvents={getTicketMasterEvents}</FetchLocationModule>;
@@ -226,19 +243,25 @@ function MapField() {
     <div className="map-field">
       {
         <div className="wrapper">
-          <Header clickHandler={promptLocationChange} />
+          <Header />
           {/* <h1>Close Around</h1>
       <h2 className="bottom"> Connecting you to your neighborhood</h2> */}
-          <GoogleMap mapContainerStyle={mapContainerStyle} zoom={12} center={center} options={options} onClick={onMapClick} onLoad={onMapLoad}>
+          <GoogleMap mapContainerStyle={mapContainerStyle} zoom={zoom} center={center }onZoomChanged={()=>{setZoom(zoom)}} options={options} onClick={onMapClick} onLoad={onMapLoad}>
             {eventList.map((event) => {
+              let iconSize = 30
+
+              if(event.userSubmitted==="TicketMaster"){
+                iconSize=20
+              }
               return (
                 <Marker
                   key={uuidv4()}
                   position={{ lat: event.lat, lng: event.lng }}
-                  icon={{ url: event.icon, scaledSize: new window.google.maps.Size(30, 30), anchor: new window.google.maps.Point(15, 15) }}
+                  icon={{ url: event.icon, scaledSize: new window.google.maps.Size(iconSize, iconSize), anchor: new window.google.maps.Point(iconSize/2, iconSize/2) }}
                   onClick={() => {
-                    setUserLat(event.lat - 0.1);
-                    setUserLng(event.lng + 0.05);
+                    setUserLat(event.lat);
+                    setUserLng(event.lng);
+                    setZoom(12);
                     setSelected(event);
                   }}
                 />
@@ -260,7 +283,7 @@ function MapField() {
               />
             )}
             <button
-              className="map-field__button"
+              className="map-field__add-button"
               onClick={() => {
                 setNewEventActive((newEventActive) => !newEventActive);
               }}
@@ -268,8 +291,16 @@ function MapField() {
               Add New Event
             </button>
 
+            <button className="map-field__change-button" onClick={promptLocationChange}>
+              Change Location
+            </button>
+
             {newEventActive ? <h4 className="map-field__question">Click where you want to add an event</h4> : null}
+
             {newEventActive && currentLat && currentLng && <NewEventPrompt lat={currentLat} lng={currentLng} clickHandler={handlePrompt} />}
+
+            {newLocationActive && currentLat && currentLng && <NewLocationPrompt lat={currentLat} lng={currentLng} clickHandler={changeLocation} />}
+
             {formActive && (
               <>
                 <EventForm submitHandler={formSubmit} selectIcon={selectIcon} />
