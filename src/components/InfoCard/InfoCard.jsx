@@ -10,6 +10,7 @@ const options = {
     backgroundColor: "navajowhite",
     padding: "15px",
   },
+  alignBottom:true,
   maxWidth: "1000px",
 };
 

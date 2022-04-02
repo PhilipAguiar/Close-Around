@@ -1,6 +1,6 @@
 import "./MapField.scss";
 import React, { useEffect, useState } from "react";
-import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
+import { GoogleMap, useLoadScript, Marker, MarkerClusterer } from "@react-google-maps/api";
 import { v4 as uuidv4 } from "uuid";
 import mapStyle from "./mapStyles";
 import NewEventPrompt from "../../components/NewEventPrompt/NewEventPrompt";
@@ -234,7 +234,6 @@ function MapField() {
     }
   };
 
-
   if (!testLat || !testLng) {
     return <FetchLocationModule clickHandler={getLocation}> getTicketMasterEvents={getTicketMasterEvents}</FetchLocationModule>;
   }
@@ -246,28 +245,64 @@ function MapField() {
           <Header />
           {/* <h1>Close Around</h1>
       <h2 className="bottom"> Connecting you to your neighborhood</h2> */}
-          <GoogleMap mapContainerStyle={mapContainerStyle} zoom={zoom} center={center }onZoomChanged={()=>{setZoom(zoom)}} options={options} onClick={onMapClick} onLoad={onMapLoad}>
-            {eventList.map((event) => {
-              let iconSize = 30
+          <GoogleMap
+            mapContainerStyle={mapContainerStyle}
+            zoom={zoom}
+            center={center}
+            onZoomChanged={() => {
+              setZoom(zoom);
+            }}
+            options={options}
+            onClick={onMapClick}
+            onLoad={onMapLoad}
+          >
+            <MarkerClusterer
+              // styles={[
+              //   {
+              //     url: "http://localhost:8080/cluster/Cluster1.svg",
+              //   },
+              //   {
+              //     url: "http://localhost:8080/cluster/Cluster1.svg",
+              //   },
+              //   {
+              //     url: "http://localhost:8080/cluster/Cluster1.svg",
+              //   },
+              //   {
+              //     url: "http://localhost:8080/cluster/Cluster1.svg",
+              //   },
+              //   {
+              //     url: "http://localhost:8080/cluster/Cluster1.svg",
+              //   },
+              // ]}
+            >
+              {(clusterer) =>
+                eventList.map((event) => {
+                  let iconSize = 30;
 
-              if(event.userSubmitted==="TicketMaster"){
-                iconSize=20
+                  if (event.userSubmitted === "TicketMaster") {
+                    iconSize = 20;
+                  }
+                  return (
+                    <Marker
+                      key={uuidv4()}
+                      position={{ lat: event.lat, lng: event.lng }}
+                      icon={{
+                        url: event.icon,
+                        scaledSize: new window.google.maps.Size(iconSize, iconSize),
+                        anchor: new window.google.maps.Point(iconSize / 2, iconSize / 2),
+                      }}
+                      onClick={() => {
+                        setUserLat(event.lat);
+                        setUserLng(event.lng);
+                        setZoom(12);
+                        setSelected(event);
+                      }}
+                      clusterer={clusterer}
+                    />
+                  );
+                })
               }
-              return (
-                <Marker
-                  key={uuidv4()}
-                  position={{ lat: event.lat, lng: event.lng }}
-                  icon={{ url: event.icon, scaledSize: new window.google.maps.Size(iconSize, iconSize), anchor: new window.google.maps.Point(iconSize/2, iconSize/2) }}
-                  onClick={() => {
-                    setUserLat(event.lat);
-                    setUserLng(event.lng);
-                    setZoom(12);
-                    setSelected(event);
-                  }}
-                />
-              );
-            })}
-
+            </MarkerClusterer>
             {/* {getUserEvents()} */}
 
             {currentLat && currentLng && (
