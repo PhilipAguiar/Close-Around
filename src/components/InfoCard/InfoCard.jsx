@@ -12,6 +12,7 @@ const options = {
   },
   alignBottom:true,
   maxWidth: "1000px",
+  closeBoxURL : ""
 };
 
 function InfoCard({ event, clickHandler }) {

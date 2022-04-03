@@ -77,7 +77,7 @@ function MapField() {
                       delay(() => {
                         let eventLat = Number(event._embedded.venues[0].location.latitude) + (Math.random() - 0.5) / 1500;
                         let eventLng = Number(event._embedded.venues[0].location.longitude) + (Math.random() - 0.5) / 1500;
-                        console.log(event);
+
                         const newEvent = {
                           id: event.id,
                           lat: eventLat,
@@ -90,11 +90,9 @@ function MapField() {
                           usersInterested: [],
                         };
 
-                        if (
-                          !eventList.find((prevEvent) => {
-                            return prevEvent.id === event.name;
-                          })
-                        ) {
+                        const repeatEvent = eventList.find((prevEvent) => prevEvent.id === event.id);
+
+                        if (!repeatEvent) {
                           setEventList((prevList) => [...prevList, newEvent]);
                         }
                       }, 1000 * i);
@@ -169,7 +167,7 @@ function MapField() {
       eventDate: e.target.date.value,
       userSubmitted: currentUser.displayName,
       userAvatar: currentUser.photoURL,
-      eventSize: 1,
+      eventSize: e.target.event.size,
       usersInterested: [],
     };
     userEventUtils.addUserEvent(newEvent);
@@ -257,21 +255,23 @@ function MapField() {
             onLoad={onMapLoad}
           >
             <MarkerClusterer
+              maxZoom={15}
               // styles={[
               //   {
-              //     url: "http://localhost:8080/cluster/Cluster1.svg",
+              //     url: "http://localhost:8080/cluster/marker.gif",
+              //     soz
               //   },
               //   {
-              //     url: "http://localhost:8080/cluster/Cluster1.svg",
+              //     url: "http://localhost:8080/cluster/marker.gif",
               //   },
               //   {
-              //     url: "http://localhost:8080/cluster/Cluster1.svg",
+              //     url: "http://localhost:8080/cluster/marker.gif",
               //   },
               //   {
-              //     url: "http://localhost:8080/cluster/Cluster1.svg",
+              //     url: "http://localhost:8080/cluster/marker.gif",
               //   },
               //   {
-              //     url: "http://localhost:8080/cluster/Cluster1.svg",
+              //     url: "http://localhost:8080/cluster/marker.gif",
               //   },
               // ]}
             >
@@ -291,6 +291,7 @@ function MapField() {
                         scaledSize: new window.google.maps.Size(iconSize, iconSize),
                         anchor: new window.google.maps.Point(iconSize / 2, iconSize / 2),
                       }}
+                      animation={1}
                       onClick={() => {
                         setUserLat(event.lat);
                         setUserLng(event.lng);
@@ -320,6 +321,7 @@ function MapField() {
             <button
               className="map-field__add-button"
               onClick={() => {
+                reset();
                 setNewEventActive((newEventActive) => !newEventActive);
               }}
             >
@@ -331,6 +333,8 @@ function MapField() {
             </button>
 
             {newEventActive ? <h4 className="map-field__question">Click where you want to add an event</h4> : null}
+
+            {newLocationActive ? <h4 className="map-field__question">Click where you want to see whats Close Around</h4> : null}
 
             {newEventActive && currentLat && currentLng && <NewEventPrompt lat={currentLat} lng={currentLng} clickHandler={handlePrompt} />}
 

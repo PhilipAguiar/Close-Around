@@ -21,6 +21,8 @@ function EventForm({submitHandler, selectIcon}) {
         <textarea className="event-form__text-area" name="description" />
         <label>When</label>
         <input className="event-form__input" name="date" />
+        <label>Event Size</label>
+        <input type="number" min="0" className="event-form__input" name="size" />
         <div className="event-form__icon-container">
           <img src={basketballIcon} onClick={clickHandler} className="event-form__icon" alt="basketball" />
           <img src={groupAddIcon} onClick={clickHandler} className="event-form__icon" alt="basketball" />
