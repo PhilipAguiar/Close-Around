@@ -6,7 +6,7 @@ function Header({clickHandler}) {
   return (
     <div className="header">
       <Link to="/">Go Back</Link>
-      <button onClick={clickHandler}>Change Location</button>
+      <Link className="header__button" to= "/login">Login</Link>
     </div>
   );
 }

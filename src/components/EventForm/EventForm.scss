@@ -39,5 +39,7 @@
   /* CSS */
   &__button {
     @include button-styling;
+    width: 80%;
+    margin: auto;
   }
 }

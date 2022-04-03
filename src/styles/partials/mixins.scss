@@ -7,7 +7,6 @@
     color: #fff;
     cursor: pointer;
     display: inline-block;
-    font-family: Circular, Helvetica, sans-serif;
     font-size: 1.125rem;
     font-weight: 700;
     letter-spacing: -0.01em;
@@ -21,11 +20,9 @@
     user-select: none;
     -webkit-user-select: none;
     touch-action: manipulation;
-    width: 80%;
-    padding: 0;
     text-align: center;
-    margin: auto;
     padding: .3rem 0;
+    
   
 
   &:disabled {

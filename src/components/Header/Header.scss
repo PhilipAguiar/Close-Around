@@ -1,8 +1,21 @@
-.header{
+@use "../../styles/partials/mixins.scss" as *;
+
+.header {
   height: 3.5rem;
   display: flex;
   justify-content: space-between;
-  padding:0 1.5rem;
+  padding: 0 1.5rem;
   align-items: center;
-  background-color: skyblue ;
+//   background: rgb(67,146,241);
+// background: linear-gradient(90deg, rgba(67,146,241,1) 0%, rgba(47,136,230,1) 51%, rgba(0,109,223,1) 100%);
+background-image: linear-gradient(65deg, #3fb6f3 0, #3cb5f2 50%, #39b4f1 100%);
+
+
+
+
+
+  &__button {
+    @include button-styling;
+    width: 100px;
+  }
 }
