@@ -6,7 +6,7 @@ import logo from "../../assets/close-around-v2.png"
 function Header({clickHandler}) {
   return (
     <div className="header">
-      <img className="info-section__logo" src={logo} alt="logo" />
+      <img className="header__logo" src={logo} alt="logo" />
       <Link className="header__button" to= "/login">Login</Link>
     </div>
   );

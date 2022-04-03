@@ -4,8 +4,16 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 100%;
+  width: 30%;
   height: 100%;
+  background-color: #478DEB;
+  &__container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+  }
 
   &__wrapper{
     height: 100%;
@@ -24,7 +32,7 @@
     width: 90%;
     margin: 0 auto;
     background-color: #f6f8ff;
-    // border: solid 2px #d6e3f9;
+    border: #2e76ce 2px solid;
   }
 
   &__text-area {
@@ -38,10 +46,10 @@
     justify-content: space-around;
   }
 
-  /* CSS */
   &__button {
     @include button-styling;
     width: 80%;
-    margin: 0 auto;
+    margin: 0 auto 1.2rem;
+    
   }
 }
