@@ -9,7 +9,7 @@ import InfoCard from "../../components/InfoCard/InfoCard";
 import TicketMasterApiUtils from "../../utils/TicketMasterApi";
 import userEventUtils from "../../utils/UserEvents";
 import FetchLocationModule from "../../components/FetchLocationModule/FetchLocationModule";
-import { delay } from "lodash";
+import { delay, join } from "lodash";
 import { useAuth } from "../../contexts/AuthContext";
 import NewLocationPrompt from "../../components/NewLocationPrompt/NewLocationPrompt";
 import Header from "../../components/Header/Header";
@@ -247,7 +247,10 @@ function MapField() {
         <InfoSection 
         formActive = {formActive} 
         submitHandler = {formSubmit}
-        selectIcon={selectIcon} />
+        selectIcon={selectIcon} 
+        selected = {selected}
+        clickHandler = {joinEvent}
+        />
 
           
           <div className="test">
@@ -350,7 +353,7 @@ function MapField() {
               {newLocationActive && currentLat && currentLng && <NewLocationPrompt lat={currentLat} lng={currentLng} clickHandler={changeLocation} />}
 
               
-              {selected ? <InfoCard event={selected} clickHandler={joinEvent}></InfoCard> : null}
+              
             </GoogleMap>
           </div>
         </div>
