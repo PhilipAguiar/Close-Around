@@ -22,7 +22,7 @@ function InfoCard({ event, clickHandler }) {
       <div className="event-card">
         <h2 className="event-card__heading">{event.eventName}</h2>
         <h1>{event.userSubmitted}</h1>
-        <img className="event-card__user-image" src={event.userAvatar}/>
+        <img className="event-card__user-image" src={event.userAvatar} alt="user"/>
         <h3>Event Description</h3>
         <p className="event-card__description">{event.eventDescription}</p>
         <h3 className="event-card__heading">When:</h3>

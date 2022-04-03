@@ -3,8 +3,14 @@
 .event-form {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   width: 100%;
   height: 100%;
+
+  &__wrapper{
+    height: 100%;
+    padding-top:2rem ;
+  }
 
   &__label{
     color: white;
@@ -36,6 +42,6 @@
   &__button {
     @include button-styling;
     width: 80%;
-    margin: auto;
+    margin: 0 auto;
   }
 }

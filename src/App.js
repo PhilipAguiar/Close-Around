@@ -15,7 +15,7 @@ function App() {
     <div className="App">
       <AuthProvider>
         <BrowserRouter>
-          {/* <Header /> */}
+          <Header />
           <Switch>
             <Route path="/" exact component={Home} />
             <Route path="/map" component={Map} />

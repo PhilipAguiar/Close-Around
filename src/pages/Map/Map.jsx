@@ -243,18 +243,7 @@ function MapField() {
     <div className="map-field">
       {
         <div className="wrapper">
-         
-        <InfoSection 
-        formActive = {formActive} 
-        submitHandler = {formSubmit}
-        selectIcon={selectIcon} 
-        selected = {selected}
-        clickHandler = {joinEvent}
-        />
-
-          
           <div className="test">
-          <Header />
             <GoogleMap
               mapContainerStyle={mapContainerStyle}
               zoom={zoom}
@@ -352,10 +341,13 @@ function MapField() {
 
               {newLocationActive && currentLat && currentLng && <NewLocationPrompt lat={currentLat} lng={currentLng} clickHandler={changeLocation} />}
 
-              
-              
+              {selected ? <InfoCard event={selected} clickHandler={joinEvent}></InfoCard> : null}
             </GoogleMap>
           </div>
+          {formActive && (
+            <InfoSection formActive={formActive} submitHandler={formSubmit} selectIcon={selectIcon} selected={selected} clickHandler={joinEvent} />
+          )}
+          
         </div>
       }
     </div>
