@@ -1,11 +1,10 @@
-import "./MapField.scss";
+import "./Map.scss";
 import React, { useEffect, useState } from "react";
-import { GoogleMap, useLoadScript, Marker, MarkerClusterer } from "@react-google-maps/api";
+import { GoogleMap, useLoadScript, Marker, MarkerClusterer, useGoogleMap } from "@react-google-maps/api";
 import { v4 as uuidv4 } from "uuid";
 import mapStyle from "./mapStyles";
 import NewEventPrompt from "../../components/NewEventPrompt/NewEventPrompt";
 import EventForm from "../../components/EventForm/EventForm";
-import Header from "../../components/Header/Header";
 import InfoCard from "../../components/InfoCard/InfoCard";
 import TicketMasterApiUtils from "../../utils/TicketMasterApi";
 import userEventUtils from "../../utils/UserEvents";
@@ -13,6 +12,7 @@ import FetchLocationModule from "../../components/FetchLocationModule/FetchLocat
 import { delay } from "lodash";
 import { useAuth } from "../../contexts/AuthContext";
 import NewLocationPrompt from "../../components/NewLocationPrompt/NewLocationPrompt";
+import Header from "../../components/Header/Header";
 
 const libraries = ["places"];
 const mapContainerStyle = {
@@ -24,6 +24,8 @@ const options = {
   styles: mapStyle,
   disableDefaultUI: true,
   zoomControl: true,
+  zoomControlOptions: { position: 7 },
+  keyboardShortcuts: false,
 };
 
 function MapField() {
@@ -240,113 +242,116 @@ function MapField() {
     <div className="map-field">
       {
         <div className="wrapper">
-          <Header />
           {/* <h1>Close Around</h1>
       <h2 className="bottom"> Connecting you to your neighborhood</h2> */}
-          <GoogleMap
-            mapContainerStyle={mapContainerStyle}
-            zoom={zoom}
-            center={center}
-            onZoomChanged={() => {
-              setZoom(zoom);
-            }}
-            options={options}
-            onClick={onMapClick}
-            onLoad={onMapLoad}
-          >
-            <MarkerClusterer
-              maxZoom={15}
-              // styles={[
-              //   {
-              //     url: "http://localhost:8080/cluster/marker.gif",
-              //     soz
-              //   },
-              //   {
-              //     url: "http://localhost:8080/cluster/marker.gif",
-              //   },
-              //   {
-              //     url: "http://localhost:8080/cluster/marker.gif",
-              //   },
-              //   {
-              //     url: "http://localhost:8080/cluster/marker.gif",
-              //   },
-              //   {
-              //     url: "http://localhost:8080/cluster/marker.gif",
-              //   },
-              // ]}
-            >
-              {(clusterer) =>
-                eventList.map((event) => {
-                  let iconSize = 30;
-
-                  if (event.userSubmitted === "TicketMaster") {
-                    iconSize = 20;
-                  }
-                  return (
-                    <Marker
-                      key={uuidv4()}
-                      position={{ lat: event.lat, lng: event.lng }}
-                      icon={{
-                        url: event.icon,
-                        scaledSize: new window.google.maps.Size(iconSize, iconSize),
-                        anchor: new window.google.maps.Point(iconSize / 2, iconSize / 2),
-                      }}
-                      animation={1}
-                      onClick={() => {
-                        setUserLat(event.lat);
-                        setUserLng(event.lng);
-                        setZoom(12);
-                        setSelected(event);
-                      }}
-                      clusterer={clusterer}
-                    />
-                  );
-                })
-              }
-            </MarkerClusterer>
-            {/* {getUserEvents()} */}
-
-            {currentLat && currentLng && (
-              <Marker
-                key={uuidv4()}
-                position={{ lat: currentLat, lng: currentLng }}
-                icon={{
-                  url: eventIcon,
-                  scaledSize: new window.google.maps.Size(30, 30),
-                  origin: new window.google.maps.Point(0, 0),
-                  anchor: new window.google.maps.Point(15, 15),
-                }}
-              />
-            )}
-            <button
-              className="map-field__add-button"
-              onClick={() => {
-                reset();
-                setNewEventActive((newEventActive) => !newEventActive);
+          <div className="event"></div>
+          <div className="test">
+          <Header />
+            <GoogleMap
+              mapContainerStyle={mapContainerStyle}
+              zoom={zoom}
+              center={center}
+              onZoomChanged={() => {
+                setZoom(zoom);
               }}
+              options={options}
+              onClick={onMapClick}
+              onLoad={onMapLoad}
             >
-              Add New Event
-            </button>
+              <MarkerClusterer
+                maxZoom={15}
+                // styles={[
+                //   {
+                //     url: "http://localhost:8080/cluster/marker.gif",
+                //     soz
+                //   },
+                //   {
+                //     url: "http://localhost:8080/cluster/marker.gif",
+                //   },
+                //   {
+                //     url: "http://localhost:8080/cluster/marker.gif",
+                //   },
+                //   {
+                //     url: "http://localhost:8080/cluster/marker.gif",
+                //   },
+                //   {
+                //     url: "http://localhost:8080/cluster/marker.gif",
+                //   },
+                // ]}
+              >
+                {(clusterer) =>
+                  eventList.map((event) => {
+                    let iconSize = 30;
 
-            <button className="map-field__change-button" onClick={promptLocationChange}>
-              Change Location
-            </button>
+                    if (event.userSubmitted === "TicketMaster") {
+                      iconSize = 20;
+                    }
+                    return (
+                      <Marker
+                        key={uuidv4()}
+                        position={{ lat: event.lat, lng: event.lng }}
+                        icon={{
+                          url: event.icon,
+                          scaledSize: new window.google.maps.Size(iconSize, iconSize),
+                          anchor: new window.google.maps.Point(iconSize / 2, iconSize / 2),
+                        }}
+                        animation={1}
+                        onClick={() => {
+                          setUserLat(event.lat);
+                          setUserLng(event.lng);
+                          setZoom(12);
+                          setSelected(event);
+                        }}
+                        clusterer={clusterer}
+                      />
+                    );
+                  })
+                }
+              </MarkerClusterer>
+              {/* {getUserEvents()} */}
 
-            {newEventActive ? <h4 className="map-field__question">Click where you want to add an event</h4> : null}
+              {currentLat && currentLng && (
+                <Marker
+                  key={uuidv4()}
+                  position={{ lat: currentLat, lng: currentLng }}
+                  icon={{
+                    url: eventIcon,
+                    scaledSize: new window.google.maps.Size(30, 30),
+                    origin: new window.google.maps.Point(0, 0),
+                    anchor: new window.google.maps.Point(15, 15),
+                  }}
+                />
+              )}
+              <button
+                className="map-field__add-button"
+                onClick={() => {
+                  reset();
+                  setNewEventActive((newEventActive) => !newEventActive);
+                }}
+              >
+                Add New Event
+              </button>
 
-            {newLocationActive ? <h4 className="map-field__question">Click where you want to see whats Close Around</h4> : null}
+              <button className="map-field__change-button" onClick={promptLocationChange}>
+                Change Location
+              </button>
 
-            {newEventActive && currentLat && currentLng && <NewEventPrompt lat={currentLat} lng={currentLng} clickHandler={handlePrompt} />}
+              {newEventActive ? <h4 className="map-field__question">Click where you want to add an event</h4> : null}
 
-            {newLocationActive && currentLat && currentLng && <NewLocationPrompt lat={currentLat} lng={currentLng} clickHandler={changeLocation} />}
+              {newLocationActive ? <h4 className="map-field__question">Click where you want to see whats Close Around</h4> : null}
 
-            {formActive && (
-              <>
-                <EventForm submitHandler={formSubmit} selectIcon={selectIcon} />
-              </>
-            )}
-            {selected ? <InfoCard event={selected} clickHandler={joinEvent}></InfoCard> : null}
-          </GoogleMap>
+              {newEventActive && currentLat && currentLng && <NewEventPrompt lat={currentLat} lng={currentLng} clickHandler={handlePrompt} />}
+
+              {newLocationActive && currentLat && currentLng && <NewLocationPrompt lat={currentLat} lng={currentLng} clickHandler={changeLocation} />}
+
+              {formActive && (
+                <>
+                  <EventForm submitHandler={formSubmit} selectIcon={selectIcon} />
+                </>
+              )}
+              {selected ? <InfoCard event={selected} clickHandler={joinEvent}></InfoCard> : null}
+            </GoogleMap>
+          </div>
         </div>
       }
     </div>

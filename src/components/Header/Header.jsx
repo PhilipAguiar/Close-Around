@@ -5,7 +5,7 @@ import "./Header.scss";
 function Header({clickHandler}) {
   return (
     <div className="header">
-      <Link to="/">Go Back</Link>
+      <Link className="header__button"  to="/">Go Back</Link>
       <Link className="header__button" to= "/login">Login</Link>
     </div>
   );

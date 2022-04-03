@@ -1,16 +1,28 @@
 @use "../../styles/partials/mixins.scss" as *;
 
-.wrapper{
+.wrapper {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.event {
+  width: 30%;
+  height: 100%;
+  background-color: #1b3067;
+}
+
+.test {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  width: 100vw;
+  width: 100%;
 }
 
 .map-field {
   z-index: 1;
   height: 100%;
   width: 100%;
+  display: flex;
 
   &__add-button {
     @include button-styling;
@@ -19,12 +31,10 @@
     left: 5%;
     z-index: 100;
     width: 10rem;
-
-
   }
-  &__change-button{
+  &__change-button {
     @extend .map-field__add-button;
-    left: 25%;
+    left: 27%;
   }
 
   &__container {
@@ -34,14 +44,14 @@
     bottom: 1rem;
     margin: auto;
   }
-  &__question{
+  &__question {
     position: absolute;
-    bottom:3rem;
-    left:40%
+    bottom: 3rem;
+    left: 40%;
   }
 }
 
-.event-card{
+.event-card {
   padding: 0;
   height: 50vh;
   width: 45vh;
