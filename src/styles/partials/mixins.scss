@@ -61,3 +61,14 @@
     transform: translateY(0.125rem);
   }
 }
+
+@mixin input-styling{
+  height: 1.3rem;
+    border-radius: 12px;
+    padding: 0.2rem 0;
+    border: none;
+    width: 90%;
+    margin: 0 auto;
+    background-color: #f6f8ff;
+    border: #2e76ce 2px solid;
+}

@@ -6,8 +6,8 @@
   justify-content: space-between;
   width: 30%;
   height: 100%;
-  background-color: #478DEB;
-  &__container{
+  background-color: #478deb;
+  &__container {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -15,12 +15,12 @@
     height: 100%;
   }
 
-  &__wrapper{
+  &__wrapper {
     height: 100%;
-    padding-top:2rem ;
+    padding-top: 2rem;
   }
 
-  &__label{
+  &__label {
     color: white;
   }
 
@@ -50,6 +50,5 @@
     @include button-styling;
     width: 80%;
     margin: 0 auto 1.2rem;
-    
   }
 }

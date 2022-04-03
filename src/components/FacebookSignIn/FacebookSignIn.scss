@@ -1,0 +1,12 @@
+.facebook-signin{
+  display: flex;
+  align-items: center;
+  background-color: #3763c4;
+  color: white;
+  border: none;
+  height: 2rem;
+  &__logo{
+    height: 100%;
+    margin-right: .5rem;
+  }
+}

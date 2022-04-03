@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { useRef } from "react";
 import { Link, useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { useAuth } from "../../contexts/AuthContext";
-import { getAuth, signInWithPopup, FacebookAuthProvider } from "firebase/auth";
+import FacebookSignIn from "../../components/FacebookSignIn/FacebookSignIn";
+import "./SignUp.scss";
 
 function SignUp() {
   const emailRef = useRef();
@@ -36,55 +37,31 @@ function SignUp() {
     setLoading(false);
   };
 
-  const facebookSignup = () => {
-    const auth = getAuth();
-    const provider = new FacebookAuthProvider();
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        // The signed-in user info.
-        const user = result.user;
-
-        // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-        const credential = FacebookAuthProvider.credentialFromResult(result);
-        const accessToken = credential.accessToken;
-        history.push("/map");
-        const photoUrl = user.photoURL + "?height=500&access_token=" + accessToken;
-        console.log(photoUrl)
-        currentUser.updateProfile({ photoURL: photoUrl });
-        console.log(currentUser.photoURL)
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.email;
-        // The AuthCredential type that was used.
-        const credential = FacebookAuthProvider.credentialFromError(error);
-
-        // ...
-      });
-  };
-
   return (
-    <>
-      <form onSubmit={handleSubmit}>
+    <div className="signup">
+      <form className="signup__form" onSubmit={handleSubmit}>
         {error && <p>{error}</p>}
-        <label>Email</label>
-        <input type="email" name="email" ref={emailRef} />
-        <label>Password</label>
-        <input type="password" name="password" ref={passwordRef} />
-        <label>Confirm password</label>
-        <input type="password" name="confirm" ref={confirmRef} />
-        <button disabled={loading}>Sign Up</button>
+        <div className="signup__input-wrapper">
+        <label className="signup__label">Email</label>
+        <input className="signup__input" type="email" name="email" ref={emailRef} />
+        </div>
+        <div className="signup__input-wrapper">
+        <label className="signup__label">Password</label>
+        <input className="signup__input" type="password" name="password" ref={passwordRef} />
+        </div>
+        <div className="signup__input-wrapper">
+        <label className="signup__label">Confirm password</label>
+        <input className="signup__input" type="password" name="confirm" ref={confirmRef} />
+        </div>
+        <button className="signup__button" disabled={loading}>
+          Sign Up
+        </button>
+        <FacebookSignIn loading={loading} signup={signup} />
+        <p className="signup__button">
+          Have an account? <Link to={"/login"}> Please log in!</Link>
+        </p>
       </form>
-      <button disabled={loading} onClick={facebookSignup}>
-        Sign Up With Facebook
-      </button>
-      <div>
-        Have an account? <Link to={"/login"}> Please log in!</Link>
-      </div>
-    </>
+    </div>
   );
 }
 
