@@ -15,13 +15,13 @@ function EventForm({submitHandler, selectIcon}) {
   return (
     <>
       <form className="event-form" onSubmit={submitHandler}>
-        <label>Event Name</label>
+        <label className="event-form__label">Event Name</label>
         <input className="event-form__input" name="event" />
-        <label>Description</label>
+        <label className="event-form__label">Description</label>
         <textarea className="event-form__text-area" name="description" />
-        <label>When</label>
+        <label className="event-form__label">When</label>
         <input className="event-form__input" name="date" />
-        <label>Event Size</label>
+        <label className="event-form__label">Event Size</label>
         <input type="number" min="0" className="event-form__input" name="size" />
         <div className="event-form__icon-container">
           <img src={basketballIcon} onClick={clickHandler} className="event-form__icon" alt="basketball" />

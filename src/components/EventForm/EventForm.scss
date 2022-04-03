@@ -3,26 +3,23 @@
 .event-form {
   display: flex;
   flex-direction: column;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
-    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-  border-radius: 25px;
-  padding: 1rem;
-  bottom: 1rem;
-  right: 1rem;
-  position: absolute;
-  background-color: #e7f0ff;
-  width: 40vw;
-  height: 60vh;
+  width: 100%;
+  height: 100%;
   border: solid 2px #13699b;
+
+  &__label{
+    color: white;
+  }
 
   &__input {
     height: 1.3rem;
     border-radius: 12px;
     padding: 0.2rem 0;
     border: none;
-    width: 100%;
+    width: 90%;
+    margin: 0 auto;
     background-color: #f6f8ff;
-    border: solid 2px #d6e3f9;
+    // border: solid 2px #d6e3f9;
   }
 
   &__text-area {

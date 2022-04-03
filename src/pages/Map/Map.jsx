@@ -13,6 +13,7 @@ import { delay } from "lodash";
 import { useAuth } from "../../contexts/AuthContext";
 import NewLocationPrompt from "../../components/NewLocationPrompt/NewLocationPrompt";
 import Header from "../../components/Header/Header";
+import InfoSection from "../../components/InfoSection/InfoSection";
 
 const libraries = ["places"];
 const mapContainerStyle = {
@@ -242,9 +243,13 @@ function MapField() {
     <div className="map-field">
       {
         <div className="wrapper">
-          {/* <h1>Close Around</h1>
-      <h2 className="bottom"> Connecting you to your neighborhood</h2> */}
-          <div className="event"></div>
+         
+        <InfoSection 
+        formActive = {formActive} 
+        submitHandler = {formSubmit}
+        selectIcon={selectIcon} />
+
+          
           <div className="test">
           <Header />
             <GoogleMap
@@ -344,11 +349,7 @@ function MapField() {
 
               {newLocationActive && currentLat && currentLng && <NewLocationPrompt lat={currentLat} lng={currentLng} clickHandler={changeLocation} />}
 
-              {formActive && (
-                <>
-                  <EventForm submitHandler={formSubmit} selectIcon={selectIcon} />
-                </>
-              )}
+              
               {selected ? <InfoCard event={selected} clickHandler={joinEvent}></InfoCard> : null}
             </GoogleMap>
           </div>
