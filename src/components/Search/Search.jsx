@@ -5,7 +5,7 @@ import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption 
 import "@reach/combobox/styles.css";
 import { useCallback } from "react";
 
-function Search({ lat, lng, mapRef }) {
+function Search({ lat, lng, panTo }) {
   const {
     ready,
     value,
@@ -14,13 +14,9 @@ function Search({ lat, lng, mapRef }) {
     clearSuggestions,
   } = usePlacesAutocomplete({
     requestOptions: {
-      location: { lat:()=> lat, lng:()=> lng },
-      radius: "20000",
+      location: { lat: () => lat, lng: () => lng },
+      radius: "200000",
     },
-  });
-
-  const panTo = useCallback(({ lat, lng }) => {
-    mapRef.current.panTo({ lat, lng });
   });
 
   return (
@@ -31,8 +27,13 @@ function Search({ lat, lng, mapRef }) {
           clearSuggestions();
           try {
             const results = await getGeocode({ address });
+            console.log(results);
             const { lat, lng } = await getLatLng(results[0]);
-            panTo({ lat, lng });
+            if (results[0].types.includes("locality")) {
+              panTo({ lat, lng }, 12);
+            } else {
+              panTo({ lat, lng }, 18);
+            }
           } catch {
             console.log("error");
           }

@@ -14,6 +14,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import NewLocationPrompt from "../../components/NewLocationPrompt/NewLocationPrompt";
 import Header from "../../components/Header/Header";
 import Search from "../../components/Search/Search";
+import { useCallback } from "react";
 
 const libraries = ["places"];
 const mapContainerStyle = {
@@ -25,7 +26,6 @@ const options = {
   styles: mapStyle,
   disableDefaultUI: true,
   zoomControl: true,
-  zoomControlOptions: { position: 7 },
   keyboardShortcuts: false,
 };
 
@@ -40,7 +40,6 @@ function MapField() {
 
   const [userLat, setUserLat] = useState(testLat);
   const [userLng, setUserLng] = useState(testLng);
-  const [zoom, setZoom] = useState(12);
   const [selected, setSelected] = useState(null);
   const [eventList, setEventList] = useState([]);
   const [newEventActive, setNewEventActive] = useState(false);
@@ -54,6 +53,11 @@ function MapField() {
   useEffect(() => {
     getTicketMasterEvents();
     getUserEvents();
+  }, []);
+
+  const panTo = useCallback(({ lat, lng },zoom) => {
+    mapRef.current.panTo({ lat, lng });
+    mapRef.current.setZoom(zoom);
   }, []);
 
   const getLocation = async () => {
@@ -195,6 +199,7 @@ function MapField() {
     lat: userLat,
     lng: userLng,
   };
+
   const joinEvent = (e, currentEvent) => {
     e.preventDefault();
     const copy = [...eventList];
@@ -244,18 +249,8 @@ function MapField() {
       {
         <div className="wrapper">
           <div className="test">
-            <GoogleMap
-              mapContainerStyle={mapContainerStyle}
-              zoom={zoom}
-              center={center}
-              onZoomChanged={() => {
-                setZoom(zoom);
-              }}
-              options={options}
-              onClick={onMapClick}
-              onLoad={onMapLoad}
-            >
-              <Search lat={currentLat} lng={currentLng} mapRef={mapRef} />
+            <GoogleMap mapContainerStyle={mapContainerStyle} zoom={12} center={center} options={options} onClick={onMapClick} onLoad={onMapLoad}>
+              <Search lat={currentLat} lng={currentLng} panTo={panTo} />
               <MarkerClusterer
                 maxZoom={15}
                 // styles={[
@@ -295,9 +290,7 @@ function MapField() {
                         }}
                         animation={1}
                         onClick={() => {
-                          setUserLat(event.lat);
-                          setUserLng(event.lng);
-                          setZoom(12);
+                          panTo({ lat: event.lat, lng: event.lng },12);
                           setSelected(event);
                         }}
                         clusterer={clusterer}
