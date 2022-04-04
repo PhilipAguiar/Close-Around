@@ -7,7 +7,7 @@ import personRemoveIcon from "../../assets/personRemove.svg";
 import plusOneIcon from "../../assets/plusOne.svg";
 import React from "react";
 
-function EventForm({ submitHandler, formActive, selectIcon,}) {
+function EventForm({ submitHandler, selectIcon,}) {
   const clickHandler = (e) => {
     selectIcon(e.target.src);
   };
@@ -19,9 +19,9 @@ function EventForm({ submitHandler, formActive, selectIcon,}) {
           <label className="event-form__label">What's Happening</label>
           <input className="event-form__input" name="event" />
           <label className="event-form__label">Where</label>
-          <input className="event-form__input" name="date" />
+          <input className="event-form__input" name="location" />
           <label className="event-form__label">When</label>
-          <input className="event-form__input" name="date" />
+          <input className="event-form__input" type="date" name="date" />
           <label className="event-form__label">Description</label>
           <textarea className="event-form__text-area" name="description" />
           <label className="event-form__label">How many people?</label>
