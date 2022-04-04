@@ -33,7 +33,7 @@ function Search({ userLat, userLng, panTo, getTicketMasterEvents, setCurrentLoca
             setCurrentLocation(lat, lng);
             if (results[0].types.find((locale) => locale === "political")) {
               getTicketMasterEvents(lat, lng);
-              panTo({ lat, lng }, 12);
+              panTo({ lat, lng }, 10);
             } else {
               getTicketMasterEvents(lat, lng);
               panTo({ lat, lng }, 18);
