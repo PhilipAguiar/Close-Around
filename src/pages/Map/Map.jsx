@@ -9,12 +9,11 @@ import InfoCard from "../../components/InfoCard/InfoCard";
 import TicketMasterApiUtils from "../../utils/TicketMasterApi";
 import userEventUtils from "../../utils/UserEvents";
 import FetchLocationModule from "../../components/FetchLocationModule/FetchLocationModule";
-import { delay, join } from "lodash";
 import { useAuth } from "../../contexts/AuthContext";
 import NewLocationPrompt from "../../components/NewLocationPrompt/NewLocationPrompt";
-import Header from "../../components/Header/Header";
 import Search from "../../components/Search/Search";
 import { useCallback } from "react";
+import LoadingScreen from "../../components/LoadingScreen/LoadingScreen";
 
 const libraries = ["places"];
 const mapContainerStyle = {
@@ -47,11 +46,12 @@ function MapField() {
   const [formActive, setFormActive] = useState(false);
   const [currentLat, setCurrentLat] = useState(null);
   const [currentLng, setCurrentLng] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [eventIcon, setEventIcon] = useState("http://maps.google.com/mapfiles/ms/icons/red.png");
   const { currentUser } = useAuth();
 
   useEffect(() => {
-    getTicketMasterEvents(testLat,testLng);
+    getTicketMasterEvents(testLat, testLng);
     getUserEvents();
   }, []);
 
@@ -67,48 +67,57 @@ function MapField() {
     });
   };
 
-  const getTicketMasterEvents = (lat,lng) => {
+  const getTicketMasterEvents = async (lat, lng) => {
     let apiRequestDelay = 1000;
-    delay(
+    setLoading(true);
+
+    let lastVenue = false;
+
+    setTimeout(
       () =>
         TicketMasterApiUtils.getVenues(lat, lng).then((res) => {
           apiRequestDelay += 1000;
-          res.data.forEach((venue) => {
-            apiRequestDelay += 1000;
 
-            delay(
-              () =>
-                TicketMasterApiUtils.getEventsByVenue(venue.id)
-                  .then((res) => {
-                    console.log(res.data._embedded.events)
-                    res.data._embedded.events.forEach((event, i) => {
-                      delay(() => {
-                        let eventLat = Number(event._embedded.venues[0].location.latitude) + (Math.random() - 0.5) / 1500;
-                        let eventLng = Number(event._embedded.venues[0].location.longitude) + (Math.random() - 0.5) / 1500;
+          res.data.forEach((venue, i) => {
+            setTimeout(() => {
+              if (res.data.length === i + 1) {
+                lastVenue = true;
+              }
 
-                        const newEvent = {
-                          id: event.id,
-                          lat: eventLat,
-                          lng: eventLng,
-                          icon: "http://localhost:8080/images/ticketmaster-logo.png",
-                          eventName: event.name,
-                          eventDescription: event.url,
-                          eventDate: event.dates.start.localDate,
-                          userSubmitted: "TicketMaster",
-                          usersInterested: [],
-                        };
+              TicketMasterApiUtils.getEventsByVenue(venue.id)
+                .then((res) => {
+                  res.data._embedded.events.forEach((event, j) => {
+                    setTimeout(() => {
+                      let eventLat = Number(event._embedded.venues[0].location.latitude) + (Math.random() - 0.5) / 1500;
+                      let eventLng = Number(event._embedded.venues[0].location.longitude) + (Math.random() - 0.5) / 1500;
 
-                        const repeatEvent = eventList.find((prevEvent) => prevEvent.id === event.id);
+                      const newEvent = {
+                        id: event.id,
+                        lat: eventLat,
+                        lng: eventLng,
+                        icon: "http://localhost:8080/images/ticketmaster-logo.png",
+                        eventName: event.name,
+                        eventDescription: event.url,
+                        eventDate: event.dates.start.localDate,
+                        userSubmitted: "TicketMaster",
+                        usersInterested: [],
+                      };
 
-                        if (!repeatEvent) {
-                          setEventList((prevList) => [...prevList, newEvent]);
-                        }
-                      }, 1000 * i);
-                    });
-                  })
-                  .catch((e) => console.log(e)),
-              apiRequestDelay
-            );
+                      const repeatEvent = eventList.find((prevEvent) => prevEvent.id === event.id);
+
+                      if (!repeatEvent) {
+                        setEventList((prevList) => [...prevList, newEvent]);
+                      }
+                      // console.log(event)
+                      console.log(i + 1, j + 1);
+                      if (i + 1 === 5 && j + 1 === 5) {
+                        setLoading(false);
+                      }
+                    }, 1000 * j);
+                  });
+                })
+                .catch((e) => console.log(e));
+            }, apiRequestDelay * i);
           });
         }),
       apiRequestDelay
@@ -221,7 +230,6 @@ function MapField() {
       ...copy[index],
       usersInterested: newUsersInterested,
     };
-    console.log(copy[index]);
     userEventUtils.editUserEvent(copy[index]);
     setEventList(copy);
     setSelected(copy[index]);
@@ -232,9 +240,9 @@ function MapField() {
     setNewLocationActive(true);
   };
 
-  const setCurrentLocation = async(lat, lng) => {
-     setUserLat(lat);
-     setUserLng(lng);
+  const setCurrentLocation = async (lat, lng) => {
+    setUserLat(lat);
+    setUserLng(lng);
   };
 
   const getEvents = (response) => {
@@ -242,7 +250,7 @@ function MapField() {
     if (response === true) {
       setUserLat(currentLat);
       setUserLng(currentLng);
-      getTicketMasterEvents(currentLat,currentLng);
+      getTicketMasterEvents(currentLat, currentLng);
     }
   };
 
@@ -256,6 +264,7 @@ function MapField() {
         <div className="wrapper">
           <div className="test">
             <GoogleMap mapContainerStyle={mapContainerStyle} zoom={12} center={center} options={options} onClick={onMapClick} onLoad={onMapLoad}>
+              {loading && <LoadingScreen />}
               <Search
                 userLat={userLat}
                 userLng={userLng}
@@ -285,7 +294,7 @@ function MapField() {
                 // ]}
               >
                 {(clusterer) =>
-                  eventList.map((event) => {
+                  eventList.map((event, i) => {
                     let iconSize = 30;
 
                     if (event.userSubmitted === "TicketMaster") {
@@ -300,7 +309,7 @@ function MapField() {
                           scaledSize: new window.google.maps.Size(iconSize, iconSize),
                           anchor: new window.google.maps.Point(iconSize / 2, iconSize / 2),
                         }}
-                        animation={1}
+                        animation={loading ? 1 : 2}
                         onClick={() => {
                           panTo({ lat: event.lat, lng: event.lng }, 12);
                           setSelected(event);
