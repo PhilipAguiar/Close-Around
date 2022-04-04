@@ -13,6 +13,7 @@ import { delay, join } from "lodash";
 import { useAuth } from "../../contexts/AuthContext";
 import NewLocationPrompt from "../../components/NewLocationPrompt/NewLocationPrompt";
 import Header from "../../components/Header/Header";
+import Search from "../../components/Search/Search";
 
 const libraries = ["places"];
 const mapContainerStyle = {
@@ -243,6 +244,7 @@ function MapField() {
       {
         <div className="wrapper">
           <div className="test">
+           
             <GoogleMap
               mapContainerStyle={mapContainerStyle}
               zoom={zoom}
@@ -346,6 +348,7 @@ function MapField() {
           {formActive && (
             <EventForm formActive={formActive} submitHandler={formSubmit} selectIcon={selectIcon} selected={selected} clickHandler={joinEvent} />
           )}
+           <Search lat={currentLat} lng = {currentLng} mapRef={mapRef}/>
           
         </div>
       }

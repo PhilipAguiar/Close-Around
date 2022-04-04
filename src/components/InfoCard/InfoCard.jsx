@@ -37,7 +37,7 @@ function InfoCard({ event, clickHandler }) {
           <p className="event-card__description">{event.eventDate} </p>
         </div>
         <div className="event-card__info-wrapper">
-          <h3 className="event-card__subheading">Event Size:</h3>
+          <h3 className="event-card__subheading">Event Size: n </h3>
           <p className="event-card__description">{event.usersInterested.length + "/" + event.eventSize}</p>
         </div>
         <h3 className="event-card__subheading">People Interested:</h3>
