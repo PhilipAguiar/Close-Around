@@ -1,4 +1,5 @@
 import React from "react";
+import "./Search.scss";
 import usePlacesAutocomplete, { getGeocode, getLatLng } from "use-places-autocomplete";
 import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from "@reach/combobox";
 import "@reach/combobox/styles.css";
@@ -13,8 +14,8 @@ function Search({ lat, lng, mapRef }) {
     clearSuggestions,
   } = usePlacesAutocomplete({
     requestOptions: {
-      location: { lat: () => lat, lng: () => lng },
-      radius: 20000,
+      location: { lat:()=> lat, lng:()=> lng },
+      radius: "20000",
     },
   });
 
@@ -26,11 +27,12 @@ function Search({ lat, lng, mapRef }) {
     <div className="search">
       <Combobox
         onSelect={async (address) => {
+          setValue(address, false);
+          clearSuggestions();
           try {
             const results = await getGeocode({ address });
             const { lat, lng } = await getLatLng(results[0]);
-            panTo({lat,lng})
-            console.log(results[0]);
+            panTo({ lat, lng });
           } catch {
             console.log("error");
           }

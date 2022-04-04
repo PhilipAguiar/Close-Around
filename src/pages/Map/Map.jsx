@@ -244,7 +244,6 @@ function MapField() {
       {
         <div className="wrapper">
           <div className="test">
-           
             <GoogleMap
               mapContainerStyle={mapContainerStyle}
               zoom={zoom}
@@ -256,6 +255,7 @@ function MapField() {
               onClick={onMapClick}
               onLoad={onMapLoad}
             >
+              <Search lat={currentLat} lng={currentLng} mapRef={mapRef} />
               <MarkerClusterer
                 maxZoom={15}
                 // styles={[
@@ -348,8 +348,6 @@ function MapField() {
           {formActive && (
             <EventForm formActive={formActive} submitHandler={formSubmit} selectIcon={selectIcon} selected={selected} clickHandler={joinEvent} />
           )}
-           <Search lat={currentLat} lng = {currentLng} mapRef={mapRef}/>
-          
         </div>
       }
     </div>
