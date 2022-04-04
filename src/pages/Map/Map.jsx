@@ -51,11 +51,11 @@ function MapField() {
   const { currentUser } = useAuth();
 
   useEffect(() => {
-    getTicketMasterEvents();
+    getTicketMasterEvents(testLat,testLng);
     getUserEvents();
   }, []);
 
-  const panTo = useCallback(({ lat, lng },zoom) => {
+  const panTo = useCallback(({ lat, lng }, zoom) => {
     mapRef.current.panTo({ lat, lng });
     mapRef.current.setZoom(zoom);
   }, []);
@@ -67,11 +67,11 @@ function MapField() {
     });
   };
 
-  const getTicketMasterEvents = () => {
+  const getTicketMasterEvents = (lat,lng) => {
     let apiRequestDelay = 1000;
     delay(
       () =>
-        TicketMasterApiUtils.getVenues(userLat, userLng).then((res) => {
+        TicketMasterApiUtils.getVenues(lat, lng).then((res) => {
           apiRequestDelay += 1000;
           res.data.forEach((venue) => {
             apiRequestDelay += 1000;
@@ -80,6 +80,7 @@ function MapField() {
               () =>
                 TicketMasterApiUtils.getEventsByVenue(venue.id)
                   .then((res) => {
+                    console.log(res.data._embedded.events)
                     res.data._embedded.events.forEach((event, i) => {
                       delay(() => {
                         let eventLat = Number(event._embedded.venues[0].location.latitude) + (Math.random() - 0.5) / 1500;
@@ -231,12 +232,17 @@ function MapField() {
     setNewLocationActive(true);
   };
 
-  const changeLocation = (response) => {
+  const setCurrentLocation = async(lat, lng) => {
+     setUserLat(lat);
+     setUserLng(lng);
+  };
+
+  const getEvents = (response) => {
     setNewLocationActive(false);
     if (response === true) {
       setUserLat(currentLat);
       setUserLng(currentLng);
-      getTicketMasterEvents();
+      getTicketMasterEvents(currentLat,currentLng);
     }
   };
 
@@ -250,7 +256,13 @@ function MapField() {
         <div className="wrapper">
           <div className="test">
             <GoogleMap mapContainerStyle={mapContainerStyle} zoom={12} center={center} options={options} onClick={onMapClick} onLoad={onMapLoad}>
-              <Search lat={currentLat} lng={currentLng} panTo={panTo} />
+              <Search
+                userLat={userLat}
+                userLng={userLng}
+                panTo={panTo}
+                getTicketMasterEvents={getTicketMasterEvents}
+                setCurrentLocation={setCurrentLocation}
+              />
               <MarkerClusterer
                 maxZoom={15}
                 // styles={[
@@ -290,7 +302,7 @@ function MapField() {
                         }}
                         animation={1}
                         onClick={() => {
-                          panTo({ lat: event.lat, lng: event.lng },12);
+                          panTo({ lat: event.lat, lng: event.lng }, 12);
                           setSelected(event);
                         }}
                         clusterer={clusterer}
@@ -333,7 +345,7 @@ function MapField() {
 
               {newEventActive && currentLat && currentLng && <NewEventPrompt lat={currentLat} lng={currentLng} clickHandler={handlePrompt} />}
 
-              {newLocationActive && currentLat && currentLng && <NewLocationPrompt lat={currentLat} lng={currentLng} clickHandler={changeLocation} />}
+              {newLocationActive && currentLat && currentLng && <NewLocationPrompt lat={currentLat} lng={currentLng} clickHandler={getEvents} />}
 
               {selected ? <InfoCard event={selected} clickHandler={joinEvent}></InfoCard> : null}
             </GoogleMap>

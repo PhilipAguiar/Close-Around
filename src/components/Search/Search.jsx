@@ -4,8 +4,9 @@ import usePlacesAutocomplete, { getGeocode, getLatLng } from "use-places-autocom
 import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from "@reach/combobox";
 import "@reach/combobox/styles.css";
 import { useCallback } from "react";
+import { v4 as uuidv4 } from "uuid";
 
-function Search({ lat, lng, panTo }) {
+function Search({ userLat, userLng, panTo, getTicketMasterEvents, setCurrentLocation }) {
   const {
     ready,
     value,
@@ -14,8 +15,8 @@ function Search({ lat, lng, panTo }) {
     clearSuggestions,
   } = usePlacesAutocomplete({
     requestOptions: {
-      location: { lat: () => lat, lng: () => lng },
-      radius: "200000",
+      location: { lat: () => userLat, lng: () => userLng },
+      radius: "20000",
     },
   });
 
@@ -27,11 +28,14 @@ function Search({ lat, lng, panTo }) {
           clearSuggestions();
           try {
             const results = await getGeocode({ address });
-            console.log(results);
             const { lat, lng } = await getLatLng(results[0]);
-            if (results[0].types.includes("locality")) {
+            console.log(lat, lng);
+            setCurrentLocation(lat, lng);
+            if (results[0].types.find((locale) => locale === "political")) {
+              getTicketMasterEvents(lat, lng);
               panTo({ lat, lng }, 12);
             } else {
+              getTicketMasterEvents(lat, lng);
               panTo({ lat, lng }, 18);
             }
           } catch {
@@ -47,7 +51,9 @@ function Search({ lat, lng, panTo }) {
           disabled={!ready}
           placeholder="Search a location"
         ></ComboboxInput>
-        <ComboboxPopover>{status === "OK" && data.map(({ id, description }) => <ComboboxOption key={id} value={description} />)}</ComboboxPopover>
+        <ComboboxPopover>
+          {status === "OK" && data.map(({ id, description }) => <ComboboxOption key={uuidv4()} value={description} />)}
+        </ComboboxPopover>
       </Combobox>
     </div>
   );
