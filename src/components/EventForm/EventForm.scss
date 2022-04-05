@@ -1,12 +1,12 @@
 @use "../../styles/partials/mixins.scss" as *;
-
+@use "../../styles/partials/colors.scss" as *;
 .event-form {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   width: 30%;
   height: 100%;
-  background-color: #478deb;
+  background-color: $primary-color;
   &__container {
     display: flex;
     flex-direction: column;

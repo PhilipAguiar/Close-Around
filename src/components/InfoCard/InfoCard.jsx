@@ -10,9 +10,9 @@ const options = {
     justifyContent: "center",
     boxShadow: `rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px`,
     borderRadius: "40px",
-    backgroundColor: "#00b4d8",
+    backgroundColor: "#3088E6",
     padding: "15px",
-    border: "7px solid #0088ae",
+    border: "7px solid #1d63ae",
     maxWidth: "400px",
     maxHeight: "80vh",
   },
@@ -81,7 +81,7 @@ function InfoCard({ event, clickHandler }) {
               );
             })}
         </ul>
-        {currentUser ? <button onClick={(e) => clickHandler(e, event)}>Join the event</button> : <Link to={"/login"}>Log in to join the event</Link>}
+        {currentUser ? <button className="event-card__button" onClick={(e) => clickHandler(e, event)}>Join the event</button> : <Link to={"/login"}>Log in to join the event</Link>}
       </div>
     </InfoBox>
   );

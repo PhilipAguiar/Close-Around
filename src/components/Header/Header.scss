@@ -1,13 +1,12 @@
 @use "../../styles/partials/mixins.scss" as *;
-
+@use "../../styles/partials/colors.scss" as *;
 .header {
   height: 3.5rem;
   display: flex;
   justify-content: space-between;
   padding: 0 1.5rem;
   align-items: center;
-  background: rgb(27, 48, 103);
-  background: linear-gradient(90deg, rgba(27, 48, 103, 1) 0%, rgba(47, 136, 230, 1) 51%, rgba(87, 145, 237, 1) 100%);
+  background: linear-gradient(90deg, $primary-color 0%, #2f88e6 0, $primary-color 100%);
 
   &__button {
     @include button-styling;
