@@ -49,12 +49,13 @@ function MapField() {
   const [currentLng, setCurrentLng] = useState(null);
   const [loading, setLoading] = useState(false);
   const [eventIcon, setEventIcon] = useState("http://maps.google.com/mapfiles/ms/icons/red.png");
+  const [loginError, setLoginError] = useState(false);
   const { currentUser } = useAuth();
 
   useEffect(() => {
     if (userLat && userLng) {
-      getTicketMasterEvents(testLat, testLng);
       getUserEvents();
+      getTicketMasterEvents(testLat, testLng);
     }
   }, []);
 
@@ -108,15 +109,27 @@ function MapField() {
                         usersInterested: [],
                       };
 
-                      const repeatEvent = eventList.find((prevEvent) => prevEvent.id === event.id);
+                      let repeatEvent = eventList.find((prevEvent) => prevEvent.id === event.id);
 
-                      if (!repeatEvent) {
-                        setEventList((prevList) => [...prevList, newEvent]);
-                      }
+                      userEventUtils
+                        .getUserEvents()
+                        .then((res) => {
+                          res.data.forEach((userEvent) => {
+                            console.log(event.id === userEvent.id);
+                            if (event.id === userEvent.id) {
+                              repeatEvent = true;
+                            }
+                          });
+                        })
+                        .then(() => {
+                          if (!repeatEvent) {
+                            setEventList((prevList) => [...prevList, newEvent]);
+                          }
 
-                      if (lastVenue === true && j + 1 === res.data._embedded.events.length) {
-                        setLoading(false);
-                      }
+                          if (lastVenue === true && j + 1 === res.data._embedded.events.length) {
+                            setLoading(false);
+                          }
+                        });
                     }, 1000 * j);
                   });
                 })
@@ -148,8 +161,8 @@ function MapField() {
             eventName: event.eventName,
             eventDescription: event.eventDescription,
             eventDate: event.eventDate,
-            userSubmitted: userName,
-            userAvatar: userPhoto,
+            userSubmitted: event.userSubmitted,
+            userAvatar: event.userAvatar,
             eventSize: 1,
             usersInterested: event.usersInterested,
           },
@@ -226,23 +239,48 @@ function MapField() {
     const copy = [...eventList];
     const index = copy.findIndex((event) => currentEvent.id === event.id);
     let newUsersInterested;
-    if (
-      currentEvent.usersInterested.find((user) => {
-        return user.id === currentUser.uid;
-      })
-    ) {
-      const index = currentEvent.usersInterested.findIndex((user) => user.id === currentUser.uid);
-      newUsersInterested = [copy[index].usersInterested.splice(index, index + 1)];
+
+    if (currentEvent.usersInterested) {
+      if (
+        currentEvent.usersInterested.find((user) => {
+          return user.id === currentUser.uid;
+        })
+      ) {
+        const index = currentEvent.usersInterested.findIndex((user) => user.id === currentUser.uid);
+        copy[index].usersInterested.splice(index);
+      } else {
+        newUsersInterested = [
+          ...copy[index].usersInterested,
+          { name: currentUser.displayName, id: currentUser.uid, userAvatar: currentUser.photoURL },
+        ];
+      }
     } else {
-      newUsersInterested = [...copy[index].usersInterested, { name: currentUser.displayName, id: currentUser.uid, userAvatar: currentUser.photoURL }];
+      newUsersInterested = [{ name: currentUser.displayName, id: currentUser.uid, userAvatar: currentUser.photoURL }];
     }
 
     copy[index] = {
       ...copy[index],
       usersInterested: newUsersInterested,
     };
-    userEventUtils.editUserEvent(copy[index]);
-    setEventList(copy);
+
+    if (currentEvent.userSubmitted === "TicketMaster") {
+      userEventUtils.getUserEvents().then((res) => {
+        if (
+          !res.data.find((event) => {
+            return event.id === currentEvent.id;
+          })
+        ) {
+          copy[index] = { ...copy[index], userSubmitted: "TicketMaster" };
+          userEventUtils.addUserEvent(copy[index]);
+        } else {
+          userEventUtils.editUserEvent(copy[index]);
+        }
+      });
+    } else {
+      userEventUtils.addUserEvent(copy[index]);
+    }
+
+    // setEventList(copy);
     setSelected(copy[index]);
   };
 
@@ -265,10 +303,7 @@ function MapField() {
   };
 
   if (!JSON.parse(localStorage.getItem("lat")) || !JSON.parse(localStorage.getItem("lng"))) {
-    return (
-      <FetchLocationModule clickHandler={getLocation} getTicketMasterEvents={getTicketMasterEvents}>
-      </FetchLocationModule>
-    );
+    return <FetchLocationModule clickHandler={getLocation} getTicketMasterEvents={getTicketMasterEvents}></FetchLocationModule>;
   }
 
   return (
@@ -351,15 +386,18 @@ function MapField() {
                 className="map-field__add-button"
                 onClick={() => {
                   reset();
-                  setNewEventActive((newEventActive) => !newEventActive);
+                  if (currentUser) {
+                    setNewEventActive((newEventActive) => !newEventActive);
+                  } else setLoginError(true);
                 }}
+                disabled={loading}
               >
                 Add New Event
               </button>
 
-              <button className="map-field__change-button" onClick={promptLocationChange}>
-                Change Location
-              </button>
+              <button className="map-field__change-button" onClick={promptLocationChange} disabled={loading}></button>
+
+              {loginError ? <h4 className="map-field__question">Please Log in to add an event!</h4> : null}
 
               {newEventActive ? <h4 className="map-field__question">Click where you want to add an event</h4> : null}
 

@@ -2,15 +2,18 @@ import React from "react";
 import { InfoBox } from "@react-google-maps/api";
 import "./InfoCard.scss";
 import { useAuth } from "../../contexts/AuthContext";
+import { Link } from "react-router-dom";
 
 const options = {
   boxStyle: {
+    display: "flex",
+    justifyContent: "center",
     boxShadow: `rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px`,
     borderRadius: "40px",
     backgroundColor: "#00b4d8",
     padding: "15px",
-    border: "2px solid #00a9d8",
-    width: "400px",
+    border: "7px solid #0088ae",
+    width: "450px",
     height: "500px",
   },
   margin: "0",
@@ -20,36 +23,63 @@ const options = {
 
 function InfoCard({ event, clickHandler }) {
   const { currentUser } = useAuth();
+  let fromEventApi = false;
+  let usersInterested = 0;
+
+  if (event.usersInterested) {
+    usersInterested = event.usersInterested.length;
+  }
+
+  if (event.userSubmitted === "TicketMaster") {
+    fromEventApi = true;
+  }
+
   return (
     <InfoBox position={{ lat: event.lat, lng: event.lng }} defaultOptions={{ disableAutoPan: true }} options={options}>
       <div className="event-card">
         <h1 className="event-card__heading">{event.eventName}</h1>
+
         <div className="event-card__info-wrapper">
-          <h3>Submitted By:{event.userSubmitted}</h3>
-          <img className="event-card__user-image" src={event.userAvatar} alt="user" />
+          <h4 className="event-card__subheading event-card__subheading--user">Submitted By:{event.userSubmitted}</h4>
+          <img className="event-card__user-image event-card__user-image--submitted" src={event.userAvatar} alt="user" />
         </div>
-        <div className="event-card__info-wrapper">
+
+        <div className="event-card__info-wrapper event-card__info-wrapper--description">
           <h3 className="event-card__subheading">Event Description: </h3>
-          <p className="event-card__description">{event.eventDescription}</p>
+          {/* Check if from Api so description will be a link */}
+          {fromEventApi ? (
+            <a href={event.eventDescription}>
+              <p className="event-card__text event-card__text--description">{event.eventDescription}</p>
+            </a>
+          ) : (
+            <p className="event-card__text event-card__text--description">{event.eventDescription}</p>
+          )}
         </div>
+
         <div className="event-card__info-wrapper">
           <h3 className="event-card__subheading">When:</h3>
-          <p className="event-card__description">{event.eventDate} </p>
+          <p className="event-card__text">{event.eventDate} </p>
         </div>
+
         <div className="event-card__info-wrapper">
-          <h3 className="event-card__subheading">Event Size: n </h3>
-          <p className="event-card__description">{event.usersInterested.length + "/" + event.eventSize}</p>
+          <h3 className="event-card__subheading">Event Size: </h3>
+          <p className="event-card__text">{!event.eventSize ? `${usersInterested} people interested` : usersInterested + "/" + event.eventSize}</p>
         </div>
+
         <h3 className="event-card__subheading">People Interested:</h3>
-        {event.usersInterested.map((user) => {
-          return (
-            <div className="event-card__info-wrapper">
-              <p>{user.name}</p>
-              {user.userAvatar ? <img className="event-card__user-image" src={user.userAvatar} alt="" /> : null}
-            </div>
-          );
-        })}
-        {currentUser ? <button onClick={(e) => clickHandler(e, event)}>Join the event</button> : <p>Sign in to join the event</p>}
+        {console.log(event.usersInterested)}
+        {event.usersInterested &&
+          event.usersInterested.map((user) => {
+            return (
+              <ul className="event-card__info-wrapper">
+                <li>
+                  <p>{user.name}</p>
+                  {user.userAvatar ? <img className="event-card__user-image" src={user.userAvatar} alt="" /> : null}
+                </li>
+              </ul>
+            );
+          })}
+        {currentUser ? <button onClick={(e) => clickHandler(e, event)}>Join the event</button> : <Link to={"/login"}>Log in to join the event</Link>}
       </div>
     </InfoBox>
   );
