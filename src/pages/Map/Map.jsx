@@ -14,6 +14,7 @@ import NewLocationPrompt from "../../components/NewLocationPrompt/NewLocationPro
 import Search from "../../components/Search/Search";
 import { useCallback } from "react";
 import LoadingScreen from "../../components/LoadingScreen/LoadingScreen";
+import defaultUserImage from "../../assets/default-user.svg";
 
 const libraries = ["places"];
 const mapContainerStyle = {
@@ -51,8 +52,10 @@ function MapField() {
   const { currentUser } = useAuth();
 
   useEffect(() => {
-    getTicketMasterEvents(testLat, testLng);
-    getUserEvents();
+    if (userLat && userLng) {
+      getTicketMasterEvents(testLat, testLng);
+      getUserEvents();
+    }
   }, []);
 
   const panTo = useCallback(({ lat, lng }, zoom) => {
@@ -61,9 +64,11 @@ function MapField() {
   }, []);
 
   const getLocation = async () => {
-    await navigator.geolocation.getCurrentPosition((position) => {
+    navigator.geolocation.getCurrentPosition((position) => {
       localStorage.setItem("lat", JSON.stringify(position.coords.latitude));
       localStorage.setItem("lng", JSON.stringify(position.coords.longitude));
+      setUserLat(Number(JSON.stringify(position.coords.latitude)));
+      setUserLng(Number(JSON.stringify(position.coords.longitude)));
     });
   };
 
@@ -108,9 +113,8 @@ function MapField() {
                       if (!repeatEvent) {
                         setEventList((prevList) => [...prevList, newEvent]);
                       }
-                      // console.log(event)
-                      console.log(i + 1, j + 1);
-                      if (i + 1 === 5 && j + 1 === 5) {
+
+                      if (lastVenue === true && j + 1 === res.data._embedded.events.length) {
                         setLoading(false);
                       }
                     }, 1000 * j);
@@ -127,6 +131,13 @@ function MapField() {
   const getUserEvents = () => {
     userEventUtils.getUserEvents().then((res) =>
       res.data.forEach((event) => {
+        let userPhoto = "http://localhost:8080/images/default-user.svg";
+        let userName = "";
+        if (currentUser) {
+          userName = currentUser.displayName;
+          userPhoto = "http://localhost:8080/images/default-user.svg";
+        }
+
         setEventList((prevList) => [
           ...prevList,
           {
@@ -137,8 +148,8 @@ function MapField() {
             eventName: event.eventName,
             eventDescription: event.eventDescription,
             eventDate: event.eventDate,
-            userSubmitted: currentUser.displayName,
-            userAvatar: currentUser.photoURL,
+            userSubmitted: userName,
+            userAvatar: userPhoto,
             eventSize: 1,
             usersInterested: event.usersInterested,
           },
@@ -240,7 +251,7 @@ function MapField() {
     setNewLocationActive(true);
   };
 
-  const setCurrentLocation = async (lat, lng) => {
+  const setUserLocation = async (lat, lng) => {
     setUserLat(lat);
     setUserLng(lng);
   };
@@ -250,12 +261,14 @@ function MapField() {
     if (response === true) {
       setUserLat(currentLat);
       setUserLng(currentLng);
-      getTicketMasterEvents(currentLat, currentLng);
     }
   };
 
-  if (!testLat || !testLng) {
-    return <FetchLocationModule clickHandler={getLocation}> getTicketMasterEvents={getTicketMasterEvents}</FetchLocationModule>;
+  if (!JSON.parse(localStorage.getItem("lat")) || !JSON.parse(localStorage.getItem("lng"))) {
+    return (
+      <FetchLocationModule clickHandler={getLocation} getTicketMasterEvents={getTicketMasterEvents}>
+      </FetchLocationModule>
+    );
   }
 
   return (
@@ -270,7 +283,7 @@ function MapField() {
                 userLng={userLng}
                 panTo={panTo}
                 getTicketMasterEvents={getTicketMasterEvents}
-                setCurrentLocation={setCurrentLocation}
+                setUserLocation={setUserLocation}
               />
               <MarkerClusterer
                 maxZoom={15}

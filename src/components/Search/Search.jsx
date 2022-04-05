@@ -6,7 +6,7 @@ import "@reach/combobox/styles.css";
 import { useCallback } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-function Search({ userLat, userLng, panTo, getTicketMasterEvents, setCurrentLocation }) {
+function Search({ userLat, userLng, panTo, getTicketMasterEvents, setUserLocation }) {
   const {
     ready,
     value,
@@ -30,13 +30,13 @@ function Search({ userLat, userLng, panTo, getTicketMasterEvents, setCurrentLoca
             const results = await getGeocode({ address });
             const { lat, lng } = await getLatLng(results[0]);
             console.log(lat, lng);
-            setCurrentLocation(lat, lng);
+            setUserLocation(lat, lng);
             if (results[0].types.find((locale) => locale === "political")) {
               getTicketMasterEvents(lat, lng);
               panTo({ lat, lng }, 10);
             } else {
               getTicketMasterEvents(lat, lng);
-              panTo({ lat, lng }, 18);
+              panTo({ lat, lng }, 14);
             }
           } catch {
             console.log("error");
@@ -52,7 +52,7 @@ function Search({ userLat, userLng, panTo, getTicketMasterEvents, setCurrentLoca
           placeholder="Search a location"
         ></ComboboxInput>
         <ComboboxPopover>
-          {status === "OK" && data.map(({ id, description }) => <ComboboxOption key={uuidv4()} value={description} />)}
+          <ComboboxList>{status === "OK" && data.map(({ id, description }) => <ComboboxOption key={uuidv4()} value={description} />)}</ComboboxList>
         </ComboboxPopover>
       </Combobox>
     </div>
