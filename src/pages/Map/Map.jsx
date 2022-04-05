@@ -115,7 +115,6 @@ function MapField() {
                         .getUserEvents()
                         .then((res) => {
                           res.data.forEach((userEvent) => {
-                            console.log(event.id === userEvent.id);
                             if (event.id === userEvent.id) {
                               repeatEvent = true;
                             }
@@ -127,7 +126,9 @@ function MapField() {
                           }
 
                           if (lastVenue === true && j + 1 === res.data._embedded.events.length) {
-                            setLoading(false);
+                            setTimeout(() => {
+                              setLoading(false);
+                            }, 4000);
                           }
                         });
                     }, 1000 * j);
@@ -247,7 +248,9 @@ function MapField() {
         })
       ) {
         const index = currentEvent.usersInterested.findIndex((user) => user.id === currentUser.uid);
-        copy[index].usersInterested.splice(index);
+        if (copy[index].usersInterested) {
+          copy[index].usersInterested.splice(index);
+        }
       } else {
         newUsersInterested = [
           ...copy[index].usersInterested,
@@ -277,10 +280,10 @@ function MapField() {
         }
       });
     } else {
-      userEventUtils.addUserEvent(copy[index]);
+      userEventUtils.editUserEvent(copy[index]);
     }
 
-    // setEventList(copy);
+    setEventList(copy);
     setSelected(copy[index]);
   };
 

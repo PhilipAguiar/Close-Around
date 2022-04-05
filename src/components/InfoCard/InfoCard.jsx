@@ -13,8 +13,8 @@ const options = {
     backgroundColor: "#00b4d8",
     padding: "15px",
     border: "7px solid #0088ae",
-    width: "450px",
-    height: "500px",
+    maxWidth: "400px",
+    maxHeight: "80vh",
   },
   margin: "0",
   alignBottom: true,
@@ -46,14 +46,16 @@ function InfoCard({ event, clickHandler }) {
 
         <div className="event-card__info-wrapper event-card__info-wrapper--description">
           <h3 className="event-card__subheading">Event Description: </h3>
-          {/* Check if from Api so description will be a link */}
-          {fromEventApi ? (
-            <a href={event.eventDescription}>
+          <div className="event-card__description-container">
+            {/* Check if from Api so description will be a link */}
+            {fromEventApi ? (
+              <a className="event-card__link event-card__info-wrapper--description" href={event.eventDescription}>
+                <p className="event-card__text event-card__text--description">{event.eventDescription}</p>
+              </a>
+            ) : (
               <p className="event-card__text event-card__text--description">{event.eventDescription}</p>
-            </a>
-          ) : (
-            <p className="event-card__text event-card__text--description">{event.eventDescription}</p>
-          )}
+            )}
+          </div>
         </div>
 
         <div className="event-card__info-wrapper">
@@ -68,17 +70,17 @@ function InfoCard({ event, clickHandler }) {
 
         <h3 className="event-card__subheading">People Interested:</h3>
         {console.log(event.usersInterested)}
-        {event.usersInterested &&
-          event.usersInterested.map((user) => {
-            return (
-              <ul className="event-card__info-wrapper">
-                <li>
+        <ul className="event-card__list-wrapper">
+          {event.usersInterested &&
+            event.usersInterested.map((user) => {
+              return (
+                <li className="event-card__list-item">
                   <p>{user.name}</p>
                   {user.userAvatar ? <img className="event-card__user-image" src={user.userAvatar} alt="" /> : null}
                 </li>
-              </ul>
-            );
-          })}
+              );
+            })}
+        </ul>
         {currentUser ? <button onClick={(e) => clickHandler(e, event)}>Join the event</button> : <Link to={"/login"}>Log in to join the event</Link>}
       </div>
     </InfoBox>
