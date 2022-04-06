@@ -53,8 +53,8 @@ function MapField() {
   const { currentUser } = useAuth();
 
   useEffect(() => {
-    currentUser.reload()
-   
+    currentUser.reload();
+
     if (userLat && userLng) {
       getUserEvents();
       getTicketMasterEvents(testLat, testLng);
@@ -66,6 +66,8 @@ function MapField() {
     mapRef.current.setZoom(zoom);
   }, []);
 
+  // Gets users location and saves it into local storage
+
   const getLocation = async () => {
     navigator.geolocation.getCurrentPosition((position) => {
       localStorage.setItem("lat", JSON.stringify(position.coords.latitude));
@@ -76,6 +78,8 @@ function MapField() {
   };
 
   const getTicketMasterEvents = async (lat, lng) => {
+    // Delay is for ticketmaster api fetch limit
+
     let apiRequestDelay = 1000;
     setLoading(true);
     setShowErrorMessage(false);
@@ -200,7 +204,6 @@ function MapField() {
 
   const formSubmit = (e) => {
     e.preventDefault();
-    
 
     let userPhoto = "http://localhost:8080/images/default-user.svg";
 
@@ -251,30 +254,35 @@ function MapField() {
     const index = copy.findIndex((event) => currentEvent.id === event.id);
     let newUsersInterested;
 
-    if (currentEvent.usersInterested) {
-      if (
-        currentEvent.usersInterested.find((user) => {
-          return user.id === currentUser.uid;
-        })
-      ) {
-        const index = currentEvent.usersInterested.findIndex((user) => user.id === currentUser.uid);
-        if (copy[index].usersInterested) {
-          copy[index].usersInterested.splice(index);
+    if (!currentUser) {
+      return;
+    } else {
+      if (currentEvent.usersInterested) {
+        if (
+          currentEvent.usersInterested.find((user) => {
+            return user.id === currentUser.uid;
+          })
+        ) {
+          const index = currentEvent.usersInterested.findIndex((user) => user.id === currentUser.uid);
+          if (copy[index].usersInterested) {
+            copy[index].usersInterested.splice(index);
+          }
+        } else {
+          newUsersInterested = [
+            ...copy[index].usersInterested,
+            { name: currentUser.displayName, id: currentUser.uid, userAvatar: currentUser.photoURL },
+          ];
         }
       } else {
-        newUsersInterested = [
-          ...copy[index].usersInterested,
-          { name: currentUser.displayName, id: currentUser.uid, userAvatar: currentUser.photoURL },
-        ];
+        newUsersInterested = [{ name: currentUser.displayName, id: currentUser.uid, userAvatar: currentUser.photoURL }];
       }
-    } else {
-      newUsersInterested = [{ name: currentUser.displayName, id: currentUser.uid, userAvatar: currentUser.photoURL }];
     }
-
     copy[index] = {
       ...copy[index],
       usersInterested: newUsersInterested,
     };
+
+    // Create instance of event in backend if it contains joined users
 
     if (currentEvent.userSubmitted === "TicketMaster") {
       userEventUtils.getUserEvents().then((res) => {
@@ -337,24 +345,7 @@ function MapField() {
               />
               <MarkerClusterer
                 maxZoom={15}
-                // styles={[
-                //   {
-                //     url: "http://localhost:8080/cluster/marker.gif",
-                //     soz
-                //   },
-                //   {
-                //     url: "http://localhost:8080/cluster/marker.gif",
-                //   },
-                //   {
-                //     url: "http://localhost:8080/cluster/marker.gif",
-                //   },
-                //   {
-                //     url: "http://localhost:8080/cluster/marker.gif",
-                //   },
-                //   {
-                //     url: "http://localhost:8080/cluster/marker.gif",
-                //   },
-                // ]}
+
               >
                 {(clusterer) =>
                   eventList.map((event, i) => {
@@ -416,7 +407,7 @@ function MapField() {
                   New Location?
                 </button>
               </div>
-              
+
               {loginError && <h4 className="map-field__question">Please Log in to add an event!</h4>}
 
               {newEventActive && <h4 className="map-field__question">Click where you want to add an event</h4>}
@@ -431,7 +422,6 @@ function MapField() {
 
               {selected ? <InfoCard event={selected} clickHandler={joinEvent}></InfoCard> : null}
             </GoogleMap>
-
           </div>
           {formActive && (
             <EventForm formActive={formActive} submitHandler={formSubmit} selectIcon={selectIcon} selected={selected} clickHandler={joinEvent} />
