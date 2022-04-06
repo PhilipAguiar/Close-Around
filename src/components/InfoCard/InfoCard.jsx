@@ -57,6 +57,11 @@ function InfoCard({ event, clickHandler }) {
           <img className="event-card__user-image event-card__user-image--submitted" src={event.userAvatar} alt="user" />
         </div>
 
+        <div className="event-card__info-wrapper">
+          <h4 className="event-card__subheading event-card__subheading--user">Location: {event.eventLocation}</h4>
+        
+        </div>
+
         <div className="event-card__info-wrapper event-card__info-wrapper--description">
           <h3 className="event-card__subheading">Event Description: </h3>
           <div className="event-card__description-container">

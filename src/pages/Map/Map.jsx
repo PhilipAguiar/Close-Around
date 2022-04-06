@@ -98,6 +98,7 @@ function MapField() {
                     setShowErrorMessage(true);
                   } else {
                     res.data._embedded.events.forEach((event, j) => {
+                      console.log(event);
                       setTimeout(() => {
                         let eventLat = Number(event._embedded.venues[0].location.latitude) + (Math.random() - 0.5) / 1500;
                         let eventLng = Number(event._embedded.venues[0].location.longitude) + (Math.random() - 0.5) / 1500;
@@ -109,6 +110,7 @@ function MapField() {
                           eventName: event.name,
                           eventDescription: event.url,
                           eventDate: event.dates.start.localDate,
+                          eventLocation: event._embedded.venues[0].name,
                           userSubmitted: "TicketMaster",
                           userAvatar: event.images[0].url,
                           usersInterested: [],
@@ -155,7 +157,7 @@ function MapField() {
         let userName = "";
         if (currentUser) {
           userName = currentUser.displayName;
-          userPhoto = "http://localhost:8080/images/default-user.svg";
+          userPhoto = currentUser.photoURL;
         }
 
         setEventList((prevList) => [
@@ -168,9 +170,10 @@ function MapField() {
             eventName: event.eventName,
             eventDescription: event.eventDescription,
             eventDate: event.eventDate,
-            userSubmitted: event.userSubmitted,
-            userAvatar: event.userAvatar,
-            eventSize: 1,
+            eventLocation: event.eventDate,
+            userSubmitted: userName,
+            userAvatar: event.userPhoto,
+            eventSize: event.eventSize,
             usersInterested: event.usersInterested,
           },
         ]);
@@ -213,6 +216,7 @@ function MapField() {
       eventName: e.target.event.value,
       eventDescription: e.target.description.value,
       eventDate: e.target.date.value,
+      eventLocation: e.target.location.value,
       userSubmitted: currentUser.displayName,
       userAvatar: currentUser.photoURL,
       eventSize: e.target.event.size,
