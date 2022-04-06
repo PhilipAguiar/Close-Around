@@ -53,8 +53,6 @@ function MapField() {
   const { currentUser } = useAuth();
 
   useEffect(() => {
-    currentUser.reload();
-
     if (userLat && userLng) {
       getUserEvents();
       getTicketMasterEvents(testLat, testLng);
@@ -321,6 +319,7 @@ function MapField() {
       setUserLat(currentLat);
       setUserLng(currentLng);
       getTicketMasterEvents(currentLat, currentLng);
+      getUserEvents()
       reset();
     }
   };

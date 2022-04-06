@@ -5,7 +5,7 @@ function LoadingScreen() {
   return (
     <div className="loading">
       <div className="loading__wrapper">
-        <h1>Checking What's Around</h1>
+        <h1>Checking What's Close Around...</h1>
         <img className="loading__gif" src={loading} alt="spinning globe" />
       </div>
     </div>
