@@ -1,16 +1,13 @@
 @use "../../styles/partials/mixins.scss" as *;
 
+.prompt {
 
-.prompt{
-  &__header{
-
-  }
-  &__button-wrapper{
+  &__button-wrapper {
     display: flex;
     width: 100%;
     justify-content: space-around;
   }
-  &__button{
+  &__button {
     @include button-styling;
     width: 25%;
   }

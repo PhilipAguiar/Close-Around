@@ -12,6 +12,7 @@
   &__button {
     @include button-styling;
     width: 100px;
+    margin-left: 2rem;
   }
   &__logo{
     height: 2rem;

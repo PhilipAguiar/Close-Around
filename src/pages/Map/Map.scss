@@ -6,8 +6,6 @@
   width: 100%;
 }
 
-
-
 .test {
   display: flex;
   flex-direction: column;
@@ -20,17 +18,19 @@
   width: 100%;
   display: flex;
 
+  &__button-container {
+    position: absolute;
+    bottom: 2rem;
+    z-index: 10;
+  }
+
   &__add-button {
     @include button-styling;
-    position: absolute;
-    bottom: 1rem;
-    left: 5%;
-    z-index: 100;
-    width: 10rem;
+    width: 200px;
+    margin-left: 5rem;
   }
   &__change-button {
     @extend .map-field__add-button;
-    left: 27%;
   }
 
   &__container {
@@ -42,8 +42,8 @@
   }
   &__question {
     position: absolute;
-    bottom: 3rem;
-    left: 40%;
+    font-size: 2rem;
+    bottom: 5rem;
+    left: 25%;
   }
 }
-

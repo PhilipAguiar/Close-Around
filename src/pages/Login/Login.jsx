@@ -22,7 +22,7 @@ function Login() {
       await login(emailRef.current.value, passwordRef.current.value);
       history.push("/map");
     } catch {
-      setError("failed to Login");
+      setError("Failed to Login");
     }
     setLoading(false);
   };
@@ -30,7 +30,7 @@ function Login() {
   return (
     <div className="login">
       <form className="login__form" onSubmit={handleSubmit}>
-        {error && <p>{error}</p>}
+        {error && <p className="login__error">{error}</p>}
         <label className="login__label">Email</label>
         <input className="login__input" type="email" name="email" ref={emailRef} />
         <label className="login__label">Password</label>

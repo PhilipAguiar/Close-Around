@@ -23,9 +23,8 @@ const options = {
 
 const convertDate = (dateString) => {
   let splitDate = dateString.split("-");
-  let date = new Date(splitDate[0] , splitDate[1]-1 , splitDate[2]);
-
-  return date.toDateString()
+  let date = new Date(splitDate[0], splitDate[1] - 1, splitDate[2]);
+  return date.toDateString();
 };
 
 function InfoCard({ event, clickHandler }) {
@@ -33,21 +32,17 @@ function InfoCard({ event, clickHandler }) {
   let fromEventApi = false;
   let numUsersInterested = 0;
 
-  let userJoinedEvent = false
-   
+  let userJoinedEvent = false;
 
-  const toggleJoinButton = () =>{
-    
+  const toggleJoinButton = () => {
     userJoinedEvent = !userJoinedEvent;
-  
-  }
-
+  };
 
   if (event.usersInterested) {
     numUsersInterested = event.usersInterested.length;
-    userJoinedEvent = event.usersInterested.find((event)=>{
-      return event.id === currentUser.uid
-    })
+    userJoinedEvent = event.usersInterested.find((event) => {
+      return event.id === currentUser.uid;
+    });
   }
 
   if (event.userSubmitted === "TicketMaster") {
@@ -66,7 +61,6 @@ function InfoCard({ event, clickHandler }) {
 
         <div className="event-card__info-wrapper">
           <h4 className="event-card__subheading event-card__subheading--user">Location: {event.eventLocation}</h4>
-        
         </div>
 
         <div className="event-card__info-wrapper event-card__info-wrapper--description">
@@ -90,14 +84,15 @@ function InfoCard({ event, clickHandler }) {
 
         <div className="event-card__info-wrapper">
           <h3 className="event-card__subheading">Event Size: </h3>
-          <p className="event-card__text">{!event.eventSize ? `${numUsersInterested} people interested` : numUsersInterested + "/" + event.eventSize}</p>
+          <p className="event-card__text">
+            {!event.eventSize ? `${numUsersInterested} people interested` : numUsersInterested + "/" + event.eventSize}
+          </p>
         </div>
 
         <h3 className="event-card__subheading">People Interested:</h3>
-        {console.log(event.usersInterested)}
         <ul className="event-card__list-wrapper">
           {event.usersInterested &&
-            event.usersInterested.map((user,i) => {
+            event.usersInterested.map((user, i) => {
               return (
                 <li key={i} className="event-card__list-item">
                   <p>{user.name}</p>
@@ -106,11 +101,20 @@ function InfoCard({ event, clickHandler }) {
               );
             })}
         </ul>
-        {currentUser ? <button className="event-card__button" onClick={(e) => {
-          toggleJoinButton()
-          clickHandler(e, event)}}>
-          {userJoinedEvent ? "Leave the event" : "Join the event"}
-          </button> : <Link to={"/login"}>Log in to join the event</Link>}
+        
+        {currentUser ? (
+          <button
+            className="event-card__button"
+            onClick={(e) => {
+              toggleJoinButton();
+              clickHandler(e, event);
+            }}
+          >
+            {userJoinedEvent ? "Leave the event" : "Join the event"}
+          </button>
+        ) : (
+          <Link to={"/login"}>Log in to join the event</Link>
+        )}
       </div>
     </InfoBox>
   );

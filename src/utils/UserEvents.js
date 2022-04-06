@@ -10,7 +10,6 @@ export default {
     eventName: event.eventName,
     eventDescription: event.eventDescription,
     eventDate: event.eventDate,
-    eventDate: event.eventDate,
     eventLocation:event.eventLocation,
     userSubmitted:event.userSubmitted,
     userAvatar:event.userAvatar,
@@ -30,5 +29,5 @@ export default {
     userAvatar:event.userAvatar,
     eventSize: event.eventSize,
     usersInterested: event.usersInterested
-  }).then(console.log(event.usersInterested))
+  })
 };

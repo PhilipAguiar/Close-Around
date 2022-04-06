@@ -9,6 +9,7 @@ function SignUp() {
   const emailRef = useRef();
   const passwordRef = useRef();
   const confirmRef = useRef();
+  const nameRef = useRef();
   const { signup } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -33,8 +34,10 @@ function SignUp() {
       currentUser.updateProfile({
         displayName: "hello",
       });
+      history.push("/map")
     }
     setLoading(false);
+
   };
 
   return (
@@ -42,6 +45,9 @@ function SignUp() {
       <form className="signup__form" onSubmit={handleSubmit}>
         {error && <p>{error}</p>}
         <div className="signup__input-wrapper">
+
+        <label className="signup__label">Full Name</label>
+        <input className="signup__input" name="name" ref={nameRef} />
         <label className="signup__label">Email</label>
         <input className="signup__input" type="email" name="email" ref={emailRef} />
         </div>

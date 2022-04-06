@@ -1,4 +1,4 @@
-.loading{
+.loading {
   display: flex;
   align-content: center;
   justify-content: center;
@@ -7,13 +7,11 @@
   width: 100%;
   position: absolute;
   z-index: 10;
-  background-color: rgba(255,255,255,.25);
+  background-color: rgba(255, 255, 255, 0.25);
   margin: auto;
   color: #2e76ce;
 
-
-
-  &__gif{
+  &__gif {
     height: 200px;
   }
 }

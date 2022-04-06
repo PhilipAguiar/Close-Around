@@ -32,14 +32,20 @@
   }
   &__label {
     width: 70%;
+    font-size: 1.7rem
   }
   &__input {
     @include input-styling;
+    
     padding: 0%;
     width: 70%;
   }
   &__button {
     @include button-styling;
+    margin: 1rem;
     width: 70%;
+  }
+  &__error{
+    font-size: 3rem
   }
 }

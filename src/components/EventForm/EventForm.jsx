@@ -21,7 +21,6 @@ import tennisIcon from "../../assets/icons/tennis.svg";
 import volleyballIcon from "../../assets/icons/volleyball.svg";
 
 import React from "react";
-import { useState } from "react";
 
 function EventForm({ submitHandler, selectIcon }) {
   const clickHandler = (e) => {
@@ -51,6 +50,7 @@ function EventForm({ submitHandler, selectIcon }) {
             <label className="event-form__label">Description</label>
             <textarea className="event-form__text-area" name="description" />
           </div>
+
           <div className="event-form__input-section">
             <label className="event-form__label">How many people?</label>
             <input type="number" min="1" className="event-form__input" name="size" />
@@ -58,27 +58,47 @@ function EventForm({ submitHandler, selectIcon }) {
         </div>
         <div className="event-form__icon-section">
           <p className="event-form__heading">Choose your icon</p>
+
           <div className="event-form__icon-container">
             <img src={basketballIcon} onClick={clickHandler} className="event-form__icon" alt="basketball" />
-            <img src={bikeIcon} onClick={clickHandler} className="event-form__icon" alt="basketball" />
-            <img src={dogIcon} onClick={clickHandler} className="event-form__icon" alt="basketball" />
-            <img src={footballIcon} onClick={clickHandler} className="event-form__icon" alt="basketball" />
-            <img src={gamingIcon} onClick={clickHandler} className="event-form__icon" alt="basketball" />
-            <img src={grillIcon} onClick={clickHandler} className="event-form__icon" alt="basketball" />
-            <img src={groupAddIcon} onClick={clickHandler} className="event-form__icon" alt="basketball" />
-            <img src={gymnasticsIcon} onClick={clickHandler} className="event-form__icon" alt="basketball" />
-            <img src={hikingIcon} onClick={clickHandler} className="event-form__icon" alt="basketball" />
-            <img src={meditateIcon} onClick={clickHandler} className="event-form__icon" alt="basketball" />
-            <img src={musicIcon} onClick={clickHandler} className="event-form__icon" alt="basketball" />
-            <img src={nightLifeIcon} onClick={clickHandler} className="event-form__icon" alt="basketball" />
-            <img src={paintIcon} onClick={clickHandler} className="event-form__icon" alt="basketball" />
-            <img src={personAddIcon} onClick={clickHandler} className="event-form__icon" alt="basketball" />
-            <img src={plusOneIcon} onClick={clickHandler} className="event-form__icon" alt="basketball" />
-            <img src={runIcon} onClick={clickHandler} className="event-form__icon" alt="basketball" />
-            <img src={soccerIcon} onClick={clickHandler} className="event-form__icon" alt="basketball" />
-            <img src={studyIcon} onClick={clickHandler} className="event-form__icon" alt="basketball" />
-            <img src={tennisIcon} onClick={clickHandler} className="event-form__icon" alt="basketball" />
-            <img src={volleyballIcon} onClick={clickHandler} className="event-form__icon" alt="basketball" />
+
+            <img src={bikeIcon} onClick={clickHandler} className="event-form__icon" alt="bike" />
+
+            <img src={dogIcon} onClick={clickHandler} className="event-form__icon" alt="dog" />
+
+            <img src={footballIcon} onClick={clickHandler} className="event-form__icon" alt="football" />
+
+            <img src={gamingIcon} onClick={clickHandler} className="event-form__icon" alt="gaming controller" />
+
+            <img src={grillIcon} onClick={clickHandler} className="event-form__icon" alt="grill" />
+
+            <img src={groupAddIcon} onClick={clickHandler} className="event-form__icon" alt="group" />
+
+            <img src={gymnasticsIcon} onClick={clickHandler} className="event-form__icon" alt="gymnastics" />
+
+            <img src={hikingIcon} onClick={clickHandler} className="event-form__icon" alt="hiking" />
+
+            <img src={meditateIcon} onClick={clickHandler} className="event-form__icon" alt="meditation" />
+
+            <img src={musicIcon} onClick={clickHandler} className="event-form__icon" alt="music note" />
+
+            <img src={nightLifeIcon} onClick={clickHandler} className="event-form__icon" alt="alcoholic drink" />
+
+            <img src={paintIcon} onClick={clickHandler} className="event-form__icon" alt="panting easel" />
+
+            <img src={personAddIcon} onClick={clickHandler} className="event-form__icon" alt="person" />
+
+            <img src={plusOneIcon} onClick={clickHandler} className="event-form__icon" alt="+1" />
+
+            <img src={runIcon} onClick={clickHandler} className="event-form__icon" alt="running" />
+
+            <img src={soccerIcon} onClick={clickHandler} className="event-form__icon" alt="soccer ball" />
+
+            <img src={studyIcon} onClick={clickHandler} className="event-form__icon" alt="book" />
+
+            <img src={tennisIcon} onClick={clickHandler} className="event-form__icon" alt="tennis" />
+
+            <img src={volleyballIcon} onClick={clickHandler} className="event-form__icon" alt="volleybal" />
           </div>
         </div>
         <button className="event-form__button">Submit</button>

@@ -21,18 +21,18 @@ function FacebookSignIn({ loading, signup }) {
         const accessToken = credential.accessToken;
         history.push("/map");
         const photoUrl = user.photoURL + "?height=500&access_token=" + accessToken;
-        console.log(photoUrl);
+
         currentUser.updateProfile({ photoURL: photoUrl });
-        console.log(currentUser.photoURL);
       })
       .catch((error) => {
         // Handle Errors here.
         const errorCode = error.code;
         const errorMessage = error.message;
         // The email of the user's account used.
-        const email = error.email;
+        const errorEmail = error.email;
         // The AuthCredential type that was used.
         const credential = FacebookAuthProvider.credentialFromError(error);
+        console.log(errorCode, errorMessage, errorEmail,credential) ;
 
         // ...
       });
@@ -40,8 +40,8 @@ function FacebookSignIn({ loading, signup }) {
 
   return (
     <button className="facebook-signin" disabled={loading} onClick={facebookSignup}>
-      <img className="facebook-signin__logo" src={logo}></img>
-      {signup ? "Sign up with Facebook" : "Log In With Facebook"}
+      <img className="facebook-signin__logo" src={logo} alt="facebook logo"></img>
+      {signup ? `Sign up with Facebook` : "Log In With Facebook"}
     </button>
   );
 }

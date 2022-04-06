@@ -1,6 +1,6 @@
 import "./Map.scss";
 import React, { useEffect, useState } from "react";
-import { GoogleMap, useLoadScript, Marker, MarkerClusterer, useGoogleMap } from "@react-google-maps/api";
+import { GoogleMap, useLoadScript, Marker, MarkerClusterer } from "@react-google-maps/api";
 import { v4 as uuidv4 } from "uuid";
 import mapStyle from "./mapStyles";
 import NewEventPrompt from "../../components/NewEventPrompt/NewEventPrompt";
@@ -14,7 +14,6 @@ import NewLocationPrompt from "../../components/NewLocationPrompt/NewLocationPro
 import Search from "../../components/Search/Search";
 import { useCallback } from "react";
 import LoadingScreen from "../../components/LoadingScreen/LoadingScreen";
-import defaultUserImage from "../../assets/default-user.svg";
 
 const libraries = ["places"];
 const mapContainerStyle = {
@@ -54,6 +53,8 @@ function MapField() {
   const { currentUser } = useAuth();
 
   useEffect(() => {
+    currentUser.reload()
+   
     if (userLat && userLng) {
       getUserEvents();
       getTicketMasterEvents(testLat, testLng);
@@ -98,7 +99,6 @@ function MapField() {
                     setShowErrorMessage(true);
                   } else {
                     res.data._embedded.events.forEach((event, j) => {
-                      console.log(event);
                       setTimeout(() => {
                         let eventLat = Number(event._embedded.venues[0].location.latitude) + (Math.random() - 0.5) / 1500;
                         let eventLng = Number(event._embedded.venues[0].location.longitude) + (Math.random() - 0.5) / 1500;
@@ -153,13 +153,6 @@ function MapField() {
   const getUserEvents = () => {
     userEventUtils.getUserEvents().then((res) =>
       res.data.forEach((event) => {
-        let userPhoto = "http://localhost:8080/images/default-user.svg";
-        let userName = "";
-        if (currentUser) {
-          userName = currentUser.displayName;
-          userPhoto = currentUser.photoURL;
-        }
-
         setEventList((prevList) => [
           ...prevList,
           {
@@ -171,8 +164,8 @@ function MapField() {
             eventDescription: event.eventDescription,
             eventDate: event.eventDate,
             eventLocation: event.eventLocation,
-            userSubmitted: userName,
-            userAvatar: userPhoto,
+            userSubmitted: event.userSubmitted,
+            userAvatar: event.userAvatar,
             eventSize: event.eventSize,
             usersInterested: event.usersInterested,
           },
@@ -207,7 +200,14 @@ function MapField() {
 
   const formSubmit = (e) => {
     e.preventDefault();
-console.log(e.target.location.value)
+    
+
+    let userPhoto = "http://localhost:8080/images/default-user.svg";
+
+    if (currentUser.photoURL) {
+      userPhoto = currentUser.photoURL;
+    }
+
     const newEvent = {
       id: uuidv4(),
       lat: currentLat,
@@ -218,7 +218,7 @@ console.log(e.target.location.value)
       eventDate: e.target.date.value,
       eventLocation: e.target.location.value,
       userSubmitted: currentUser.displayName,
-      userAvatar: currentUser.photoURL,
+      userAvatar: userPhoto,
       eventSize: e.target.event.size,
       usersInterested: [],
     };
@@ -312,6 +312,8 @@ console.log(e.target.location.value)
     if (response === true) {
       setUserLat(currentLat);
       setUserLng(currentLng);
+      getTicketMasterEvents(currentLat, currentLng);
+      reset();
     }
   };
 
@@ -396,28 +398,32 @@ console.log(e.target.location.value)
                   animation={1}
                 />
               )}
-              <button
-                className="map-field__add-button"
-                onClick={() => {
-                  reset();
-                  if (currentUser) {
-                    setNewEventActive((newEventActive) => !newEventActive);
-                  } else setLoginError(true);
-                }}
-                disabled={loading}
-              >
-                Add New Event
-              </button>
+              <div className="map-field__button-container">
+                <button
+                  className="map-field__add-button"
+                  onClick={() => {
+                    reset();
+                    if (currentUser) {
+                      setNewEventActive((newEventActive) => !newEventActive);
+                    } else setLoginError(true);
+                  }}
+                  disabled={loading}
+                >
+                  Add New Event
+                </button>
 
-              <button className="map-field__change-button" onClick={promptLocationChange} disabled={loading}></button>
-
+                <button className="map-field__change-button" onClick={promptLocationChange} disabled={loading}>
+                  New Location?
+                </button>
+              </div>
+              
               {loginError && <h4 className="map-field__question">Please Log in to add an event!</h4>}
 
               {newEventActive && <h4 className="map-field__question">Click where you want to add an event</h4>}
 
               {showErrorMessage && <h4 className="map-field__question">{`No TicketMaster events in this area :(`}</h4>}
 
-              {newLocationActive ? <h4 className="map-field__question">Click where you want to see whats Close Around</h4> : null}
+              {newLocationActive ? <h4 className="map-field__question">Click where you want to search around</h4> : null}
 
               {newEventActive && currentLat && currentLng && <NewEventPrompt lat={currentLat} lng={currentLng} clickHandler={handlePrompt} />}
 
@@ -425,6 +431,7 @@ console.log(e.target.location.value)
 
               {selected ? <InfoCard event={selected} clickHandler={joinEvent}></InfoCard> : null}
             </GoogleMap>
+
           </div>
           {formActive && (
             <EventForm formActive={formActive} submitHandler={formSubmit} selectIcon={selectIcon} selected={selected} clickHandler={joinEvent} />

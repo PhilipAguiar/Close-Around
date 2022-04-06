@@ -33,19 +33,21 @@
    @include scroll-box-styling;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
    
   }
   &__list-item {
+    word-break: normal;
     border: $secondary-color solid 2px;
     background-color: $primary-color;
     border-radius: 40px;
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
     padding: 0.2rem 0.3rem;
     margin: 0.2rem;
+    width:30%;
+    height: 50px;
   }
 
   &__heading {

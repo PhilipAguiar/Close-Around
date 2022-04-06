@@ -3,7 +3,6 @@ import "./Search.scss";
 import usePlacesAutocomplete, { getGeocode, getLatLng } from "use-places-autocomplete";
 import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from "@reach/combobox";
 import "@reach/combobox/styles.css";
-import { useCallback } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 function Search({ userLat, userLng, panTo, getTicketMasterEvents, setUserLocation }) {
@@ -29,7 +28,7 @@ function Search({ userLat, userLng, panTo, getTicketMasterEvents, setUserLocatio
           try {
             const results = await getGeocode({ address });
             const { lat, lng } = await getLatLng(results[0]);
-            console.log(lat, lng);
+
             setUserLocation(lat, lng);
             if (results[0].types.find((locale) => locale === "political")) {
               getTicketMasterEvents(lat, lng);
@@ -51,6 +50,7 @@ function Search({ userLat, userLng, panTo, getTicketMasterEvents, setUserLocatio
           disabled={!ready}
           placeholder="Search a location"
         ></ComboboxInput>
+
         <ComboboxPopover>
           <ComboboxList>{status === "OK" && data.map(({ id, description }) => <ComboboxOption key={uuidv4()} value={description} />)}</ComboboxList>
         </ComboboxPopover>

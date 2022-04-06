@@ -1,70 +1,81 @@
-# Getting Started with Create React App
+<!-- ABOUT THE PROJECT -->
+## About The Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Close around is a platform for people to see whats going around in their neighborhood from professional events to a local pickup game at the park. Just enter your location and the application does the rest!
 
-## Available Scripts
+![ScreenShot](./src/assets/example.png)
 
-In the project directory, you can run:
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-### `npm start`
+### Built With
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+* [@reach/combobox](https://reach.tech/combobox/)
+* [@react-google-maps/api](https://www.npmjs.com/package/@react-google-maps/api)
+* [Axios](https://www.npmjs.com/package/axios)
+* [Firebase](https://firebase.google.com/)
+* [React](https://reactjs.org/)
+* [use-places-autocomplete](https://www.npmjs.com/package/use-places-autocomplete)
+* [Sass](https://sass-lang.com/)
+* [PM2](https://pm2.keymetrics.io/)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+<!-- GETTING STARTED -->
+## Getting Started
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+To get started with this application make sure you have both the front end (https://github.com/PhilipAguiar/Close-Around) and back-end repositories (https://github.com/PhilipAguiar/Close-Around-api)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Prerequisites
 
-### `npm run eject`
+1) Install all dependencies using npm i on both front and back end repos.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+2) Install additional package on api repository - npm install pm2
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3) Npm start on front end and pm2 start app.js when ready ro run application
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Installation
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1. Create a google maps api key at [https://console.cloud.google.com/projectselector2/google/maps-apis/credentials](https://console.cloud.google.com/projectselector2/google/maps-apis/credentials)
 
-## Learn More
+Instructors can use default in .env
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+<!-- USAGE EXAMPLES -->
+## Usage
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Create an account through and email or through facebook.
 
-### Code Splitting
+Approve the request for the application to use your location.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Easily see a map of your nearby area and find events you are interested in!
 
-### Analyzing the Bundle Size
+![ScreenShot](./src/assets/example2.png)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Once you see an event you like you can join the event and see who else is interested!
 
-### Making a Progressive Web App
+![ScreenShot](./src/assets/paintNight.png)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+If you don't see an event your interested you can add your own!
 
-### Advanced Configuration
+![ScreenShot](./src/assets/example.png)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Going on a trip or just curious whats happening somewhere else? You can search and find events worldwide.
 
-### Deployment
+![ScreenShot](./src/assets/sanFran.png)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+<!-- CONTACT -->
+## Contact
 
-### `npm run build` fails to minify
+Philip Aguiar - [@GitHub](https://github.com/PhilipAguiar) - 
+[@LinkedIn](https://www.linkedin.com/in/philip-aguiar/) -
+PhilipAguiar@gmail.com
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+<!-- ACKNOWLEDGMENTS -->
+## Acknowledgments
+
+This Project would not be possible without the great eduction team at [BrainStation](https://brainstation.io/)
+

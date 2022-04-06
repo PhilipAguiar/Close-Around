@@ -1,11 +1,12 @@
-import React from 'react'
+import React from "react";
 import "./NewLocationPrompt.scss";
 import { InfoWindow } from "@react-google-maps/api";
-function NewLocationPrompt({lat,lng,clickHandler}) {
+function NewLocationPrompt({ lat, lng, clickHandler }) {
   return (
     <InfoWindow position={{ lat: lat, lng: lng }}>
       <div className="prompt">
         <h4 className="prompt__header">Find whats Close Around here?</h4>
+
         <div className="prompt__button-wrapper">
           <button className="prompt__button" onClick={() => clickHandler(true)}>
             Yes
@@ -14,9 +15,10 @@ function NewLocationPrompt({lat,lng,clickHandler}) {
             No
           </button>
         </div>
+        
       </div>
     </InfoWindow>
   );
 }
 
-export default NewLocationPrompt
+export default NewLocationPrompt;

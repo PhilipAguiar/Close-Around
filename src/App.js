@@ -16,12 +16,14 @@ function App() {
       <AuthProvider>
         <BrowserRouter>
           <Header />
+
           <Switch>
             <Route path="/" exact component={Home} />
             <Route path="/map" component={Map} />
             <Route path="/signup" component={SignUp} />
             <Route path="/login" component={Login} />
           </Switch>
+          
         </BrowserRouter>
       </AuthProvider>
     </div>
