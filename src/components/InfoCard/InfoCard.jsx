@@ -21,6 +21,13 @@ const options = {
   closeBoxURL: "",
 };
 
+const convertDate = (dateString) => {
+  let splitDate = dateString.split("-");
+  let date = new Date(splitDate[0] , splitDate[1]-1 , splitDate[2]);
+
+  return date.toDateString()
+};
+
 function InfoCard({ event, clickHandler }) {
   const { currentUser } = useAuth();
   let fromEventApi = false;
@@ -78,7 +85,7 @@ function InfoCard({ event, clickHandler }) {
 
         <div className="event-card__info-wrapper">
           <h3 className="event-card__subheading">When:</h3>
-          <p className="event-card__text">{event.eventDate} </p>
+          <p className="event-card__text">{convertDate(event.eventDate)} </p>
         </div>
 
         <div className="event-card__info-wrapper">

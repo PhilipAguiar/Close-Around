@@ -170,9 +170,9 @@ function MapField() {
             eventName: event.eventName,
             eventDescription: event.eventDescription,
             eventDate: event.eventDate,
-            eventLocation: event.eventDate,
+            eventLocation: event.eventLocation,
             userSubmitted: userName,
-            userAvatar: event.userPhoto,
+            userAvatar: userPhoto,
             eventSize: event.eventSize,
             usersInterested: event.usersInterested,
           },
@@ -183,7 +183,7 @@ function MapField() {
 
   const reset = () => {
     setNewLocationActive(false);
-    setNewEventActive((newEventActive) => (newEventActive = false));
+    setNewEventActive(false);
     setFormActive(false);
     setCurrentLat(null);
     setCurrentLng(null);
@@ -207,7 +207,7 @@ function MapField() {
 
   const formSubmit = (e) => {
     e.preventDefault();
-
+console.log(e.target.location.value)
     const newEvent = {
       id: uuidv4(),
       lat: currentLat,

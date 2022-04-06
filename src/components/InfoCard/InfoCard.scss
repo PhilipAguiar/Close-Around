@@ -85,6 +85,7 @@
   }
   &__button{
     @include button-styling;
+    background-color: $tertiary-color;
     width: 200px;
   }
 }
