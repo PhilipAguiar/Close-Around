@@ -50,6 +50,7 @@ function MapField() {
   const [loading, setLoading] = useState(false);
   const [eventIcon, setEventIcon] = useState("http://maps.google.com/mapfiles/ms/icons/red.png");
   const [loginError, setLoginError] = useState(false);
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
   const { currentUser } = useAuth();
 
   useEffect(() => {
@@ -76,7 +77,7 @@ function MapField() {
   const getTicketMasterEvents = async (lat, lng) => {
     let apiRequestDelay = 1000;
     setLoading(true);
-
+    setShowErrorMessage(false);
     let lastVenue = false;
 
     setTimeout(
@@ -92,47 +93,52 @@ function MapField() {
 
               TicketMasterApiUtils.getEventsByVenue(venue.id)
                 .then((res) => {
-                  res.data._embedded.events.forEach((event, j) => {
-                    setTimeout(() => {
-                      let eventLat = Number(event._embedded.venues[0].location.latitude) + (Math.random() - 0.5) / 1500;
-                      let eventLng = Number(event._embedded.venues[0].location.longitude) + (Math.random() - 0.5) / 1500;
-                      const newEvent = {
-                        id: event.id,
-                        lat: eventLat,
-                        lng: eventLng,
-                        icon: "http://localhost:8080/images/ticketmaster-logo.png",
-                        eventName: event.name,
-                        eventDescription: event.url,
-                        eventDate: event.dates.start.localDate,
-                        userSubmitted: "TicketMaster",
-                        userAvatar: event.images[0].url,
-                        usersInterested: [],
-                      };
+                  if (!res.data._embedded) {
+                    setLoading(false);
+                    setShowErrorMessage(true);
+                  } else {
+                    res.data._embedded.events.forEach((event, j) => {
+                      setTimeout(() => {
+                        let eventLat = Number(event._embedded.venues[0].location.latitude) + (Math.random() - 0.5) / 1500;
+                        let eventLng = Number(event._embedded.venues[0].location.longitude) + (Math.random() - 0.5) / 1500;
+                        const newEvent = {
+                          id: event.id,
+                          lat: eventLat,
+                          lng: eventLng,
+                          icon: "http://localhost:8080/images/ticketmaster-logo.png",
+                          eventName: event.name,
+                          eventDescription: event.url,
+                          eventDate: event.dates.start.localDate,
+                          userSubmitted: "TicketMaster",
+                          userAvatar: event.images[0].url,
+                          usersInterested: [],
+                        };
 
-                      let repeatEvent = eventList.find((prevEvent) => prevEvent.id === event.id);
+                        let repeatEvent = eventList.find((prevEvent) => prevEvent.id === event.id);
 
-                      userEventUtils
-                        .getUserEvents()
-                        .then((res) => {
-                          res.data.forEach((userEvent) => {
-                            if (event.id === userEvent.id) {
-                              repeatEvent = true;
+                        userEventUtils
+                          .getUserEvents()
+                          .then((res) => {
+                            res.data.forEach((userEvent) => {
+                              if (event.id === userEvent.id) {
+                                repeatEvent = true;
+                              }
+                            });
+                          })
+                          .then(() => {
+                            if (!repeatEvent) {
+                              setEventList((prevList) => [...prevList, newEvent]);
+                            }
+
+                            if (lastVenue === true && j + 1 === res.data._embedded.events.length) {
+                              setTimeout(() => {
+                                setLoading(false);
+                              }, 4000);
                             }
                           });
-                        })
-                        .then(() => {
-                          if (!repeatEvent) {
-                            setEventList((prevList) => [...prevList, newEvent]);
-                          }
-
-                          if (lastVenue === true && j + 1 === res.data._embedded.events.length) {
-                            setTimeout(() => {
-                              setLoading(false);
-                            }, 4000);
-                          }
-                        });
-                    }, 1000 * j);
-                  });
+                      }, 1000 * j);
+                    });
+                  }
                 })
                 .catch((e) => console.log(e));
             }, apiRequestDelay * i);
@@ -400,9 +406,11 @@ function MapField() {
 
               <button className="map-field__change-button" onClick={promptLocationChange} disabled={loading}></button>
 
-              {loginError ? <h4 className="map-field__question">Please Log in to add an event!</h4> : null}
+              {loginError && <h4 className="map-field__question">Please Log in to add an event!</h4>}
 
-              {newEventActive ? <h4 className="map-field__question">Click where you want to add an event</h4> : null}
+              {newEventActive && <h4 className="map-field__question">Click where you want to add an event</h4>}
+
+              {showErrorMessage && <h4 className="map-field__question">{`No TicketMaster events in this area :(`}</h4>}
 
               {newLocationActive ? <h4 className="map-field__question">Click where you want to see whats Close Around</h4> : null}
 

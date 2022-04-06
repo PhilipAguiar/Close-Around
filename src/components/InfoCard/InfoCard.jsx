@@ -85,9 +85,9 @@ function InfoCard({ event, clickHandler }) {
         {console.log(event.usersInterested)}
         <ul className="event-card__list-wrapper">
           {event.usersInterested &&
-            event.usersInterested.map((user) => {
+            event.usersInterested.map((user,i) => {
               return (
-                <li className="event-card__list-item">
+                <li key={i} className="event-card__list-item">
                   <p>{user.name}</p>
                   {user.userAvatar ? <img className="event-card__user-image" src={user.userAvatar} alt="" /> : null}
                 </li>
