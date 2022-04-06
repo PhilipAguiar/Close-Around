@@ -4,9 +4,11 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 30%;
+  width: 20%;
   height: 100%;
   background-color: $primary-color;
+  border-left: $secondary-color 3px solid;
+
   &__container {
     display: flex;
     flex-direction: column;
@@ -16,39 +18,66 @@
   }
 
   &__wrapper {
-    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 60%;
     padding-top: 2rem;
+  }
+  &__input-section {
+    display: flex;
+    flex-direction: column;
   }
 
   &__label {
     color: white;
+    font-weight: 600;
   }
 
   &__input {
-    height: 1.3rem;
+    height: 1.7rem;
     border-radius: 12px;
-    padding: 0.2rem 0;
-    border: none;
-    width: 90%;
-    margin: 0 auto;
+    padding: 0.2rem 0.4rem 0.2rem;
+
+    width: 80%;
+    margin: 0.2rem auto 0.4rem;
     background-color: #f6f8ff;
-    border: #2e76ce 2px solid;
+    border: $secondary-color 3px solid;
   }
 
   &__text-area {
     @extend .event-form__input;
-    height: 40%;
+    height: 200px;
     resize: none;
+  }
+
+  &__icon-section {
+    @include scroll-box-styling;
+    height: 100%;
+    width: 85%;
+    margin: 0.5rem auto;
   }
 
   &__icon-container {
     display: flex;
-    justify-content: space-around;
+    align-content: flex-start;
+    flex-wrap: wrap;
+    justify-content: center;
+    height: 100%;
+  }
+  &__icon {
+    cursor: pointer;
+    height: 30px;
+    margin: 0.15rem 0.3rem;
+  }
+  &__heading {
+    margin: 0 0 .8rem;
+    color: #fff;
   }
 
   &__button {
     @include button-styling;
-    width: 80%;
+    width: 88%;
     margin: 0 auto 1.2rem;
   }
 }

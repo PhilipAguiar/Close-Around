@@ -393,6 +393,7 @@ console.log(e.target.location.value)
                     origin: new window.google.maps.Point(0, 0),
                     anchor: new window.google.maps.Point(15, 15),
                   }}
+                  animation={1}
                 />
               )}
               <button
