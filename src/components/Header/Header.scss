@@ -7,7 +7,7 @@
   padding: 0 1.5rem;
   align-items: center;
   background: $secondary-color;
-  // background: linear-gradient(90deg,$secondary-color 0%, $primary-color 51%, $primary-color 100%);
+  background: linear-gradient(90deg,$secondary-color 23%, $primary-color 91%, $primary-color 100%);
 
   &__button {
     @include button-styling;

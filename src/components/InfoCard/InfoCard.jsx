@@ -24,10 +24,23 @@ const options = {
 function InfoCard({ event, clickHandler }) {
   const { currentUser } = useAuth();
   let fromEventApi = false;
-  let usersInterested = 0;
+  let numUsersInterested = 0;
+
+  let userJoinedEvent = false
+   
+
+  const toggleJoinButton = () =>{
+    
+    userJoinedEvent = !userJoinedEvent;
+  
+  }
+
 
   if (event.usersInterested) {
-    usersInterested = event.usersInterested.length;
+    numUsersInterested = event.usersInterested.length;
+    userJoinedEvent = event.usersInterested.find((event)=>{
+      return event.id === currentUser.uid
+    })
   }
 
   if (event.userSubmitted === "TicketMaster") {
@@ -40,7 +53,7 @@ function InfoCard({ event, clickHandler }) {
         <h1 className="event-card__heading">{event.eventName}</h1>
 
         <div className="event-card__info-wrapper">
-          <h4 className="event-card__subheading event-card__subheading--user">Submitted By:{event.userSubmitted}</h4>
+          <h4 className="event-card__subheading event-card__subheading--user">Submitted By: {event.userSubmitted}</h4>
           <img className="event-card__user-image event-card__user-image--submitted" src={event.userAvatar} alt="user" />
         </div>
 
@@ -65,7 +78,7 @@ function InfoCard({ event, clickHandler }) {
 
         <div className="event-card__info-wrapper">
           <h3 className="event-card__subheading">Event Size: </h3>
-          <p className="event-card__text">{!event.eventSize ? `${usersInterested} people interested` : usersInterested + "/" + event.eventSize}</p>
+          <p className="event-card__text">{!event.eventSize ? `${numUsersInterested} people interested` : numUsersInterested + "/" + event.eventSize}</p>
         </div>
 
         <h3 className="event-card__subheading">People Interested:</h3>
@@ -81,7 +94,11 @@ function InfoCard({ event, clickHandler }) {
               );
             })}
         </ul>
-        {currentUser ? <button className="event-card__button" onClick={(e) => clickHandler(e, event)}>Join the event</button> : <Link to={"/login"}>Log in to join the event</Link>}
+        {currentUser ? <button className="event-card__button" onClick={(e) => {
+          toggleJoinButton()
+          clickHandler(e, event)}}>
+          {userJoinedEvent ? "Leave the event" : "Join the event"}
+          </button> : <Link to={"/login"}>Log in to join the event</Link>}
       </div>
     </InfoBox>
   );

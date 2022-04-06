@@ -96,7 +96,6 @@ function MapField() {
                     setTimeout(() => {
                       let eventLat = Number(event._embedded.venues[0].location.latitude) + (Math.random() - 0.5) / 1500;
                       let eventLng = Number(event._embedded.venues[0].location.longitude) + (Math.random() - 0.5) / 1500;
-
                       const newEvent = {
                         id: event.id,
                         lat: eventLat,
@@ -106,6 +105,7 @@ function MapField() {
                         eventDescription: event.url,
                         eventDate: event.dates.start.localDate,
                         userSubmitted: "TicketMaster",
+                        userAvatar: event.images[0].url,
                         usersInterested: [],
                       };
 
