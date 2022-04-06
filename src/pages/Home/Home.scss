@@ -1,23 +1,41 @@
+@use "../../styles/partials/mixins.scss" as *;
+@use "../../styles/partials/colors.scss" as *;
+
 .home {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  &__background {
-    position: fixed;
+  background-color: $secondary-color;
+  height: 100%;
+  &__hero {
+    height: 60%;
     width: 100%;
-    height: 100%;
-    z-index: 0;
-    opacity: 0.6;
-    background-image: url(../../assets/question-marks.jpeg);
-    background-repeat: no-repeat;
-    background-size: cover;
+    background-color: #ffffff;
   }
- 
-  &__container{
-    z-index: 1;
+  &__info-section {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 40%;
+    width: 90%;
+    margin: auto;
+    background-color: $secondary-color;
+  }
+  &__card{
+    height: 60%;
+    width: 300px;
+    border-radius: 30px;
+    background-color: #ffffff;
+  }
+  &__hero{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  }
+  &__text-wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  &__image{
+    height: 300px;
+    width: 400px;
   }
 }

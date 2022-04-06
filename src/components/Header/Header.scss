@@ -6,7 +6,8 @@
   justify-content: space-between;
   padding: 0 1.5rem;
   align-items: center;
-  background: linear-gradient(90deg, $primary-color 0%, #2f88e6 0, $primary-color 100%);
+  background: $secondary-color;
+  // background: linear-gradient(90deg,$secondary-color 0%, $primary-color 51%, $primary-color 100%);
 
   &__button {
     @include button-styling;
