@@ -19,10 +19,10 @@ function FacebookSignIn({ loading, signup }) {
         // This gives you a Facebook Access Token. You can use it to access the Facebook API.
         const credential = FacebookAuthProvider.credentialFromResult(result);
         const accessToken = credential.accessToken;
-        history.push("/map");
         const photoUrl = user.photoURL + "?height=500&access_token=" + accessToken;
-
-        currentUser.updateProfile({ photoURL: photoUrl });
+        currentUser.updateProfile({ photoURL: photoUrl }).then(() => {
+          history.push("/map");
+        });
       })
       .catch((error) => {
         // Handle Errors here.
@@ -32,7 +32,7 @@ function FacebookSignIn({ loading, signup }) {
         const errorEmail = error.email;
         // The AuthCredential type that was used.
         const credential = FacebookAuthProvider.credentialFromError(error);
-        console.log(errorCode, errorMessage, errorEmail,credential) ;
+        console.log(errorCode, errorMessage, errorEmail, credential);
 
         // ...
       });

@@ -1,5 +1,6 @@
-@use "../../styles/partials/mixins.scss" as *;
-@use "../../styles/partials/colors.scss" as *;
+@use "../../styles/partials/mixins.scss"as *;
+@use "../../styles/partials/colors.scss"as *;
+
 .signup {
   display: flex;
   width: 100%;
@@ -21,7 +22,7 @@
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     background-color: $primary-color;
   }
- 
+
   &__input-wrapper {
 
     width: 100%;
@@ -30,22 +31,37 @@
     flex-direction: column;
     justify-content: center;
   }
+
   &__label {
+    padding: .5rem 0;
     width: 70%;
     font-size: 1.7rem
   }
+
   &__input {
     @include input-styling;
     border: $secondary-color 3px solid;
     padding: .3rem .6rem;
     width: 70%;
   }
+
   &__button {
     @include button-styling;
-    margin: 1rem;
+    margin: 1rem 0 .75rem;
     width: 73%;
   }
-  &__error{
+
+  &__error {
     font-size: 1.9rem
+  }
+
+  &__avatar-wrapper {
+    display: flex;
+    flex-direction: row;
+  }
+
+  &__avatar {
+    height: 50px;
+    width: 50px;
   }
 }

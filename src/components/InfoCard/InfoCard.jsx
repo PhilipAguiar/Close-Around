@@ -14,7 +14,9 @@ const options = {
     padding: "15px",
     border: "7px solid #1d63ae",
     maxWidth: "400px",
-    maxHeight: "80vh",
+    maxHeight: "700px",
+    overflowY:"scroll",
+
   },
   margin: "0",
   alignBottom: true,
@@ -38,7 +40,7 @@ function InfoCard({ event, clickHandler }) {
     userJoinedEvent = !userJoinedEvent;
   };
 
-  if (event.usersInterested) {
+  if (event.usersInterested && currentUser) {
     numUsersInterested = event.usersInterested.length;
     userJoinedEvent = event.usersInterested.find((event) => {
       return event.id === currentUser.uid;
@@ -68,7 +70,7 @@ function InfoCard({ event, clickHandler }) {
           <div className="event-card__description-container">
             {/* Check if from Api so description will be a link */}
             {fromEventApi ? (
-              <a className="event-card__link event-card__info-wrapper--description" href={event.eventDescription}>
+              <a className="event-card__link event-card__info-wrapper--description" target="_blank" rel="noreferrer" href={event.eventDescription}>
                 <p className="event-card__text event-card__text--description">{event.eventDescription}</p>
               </a>
             ) : (
@@ -95,13 +97,13 @@ function InfoCard({ event, clickHandler }) {
             event.usersInterested.map((user, i) => {
               return (
                 <li key={i} className="event-card__list-item">
-                  <p>{user.name}</p>
+                  <p className="event-card__name">{user.name}</p>
                   {user.userAvatar ? <img className="event-card__user-image" src={user.userAvatar} alt="" /> : null}
                 </li>
               );
             })}
         </ul>
-        
+
         {currentUser ? (
           <button
             className="event-card__button"

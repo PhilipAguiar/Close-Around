@@ -1,5 +1,6 @@
 @use "../../styles/partials/mixins.scss" as *;
 @use "../../styles/partials/colors.scss" as *;
+
 .login {
   display: flex;
   width: 100%;
@@ -14,16 +15,15 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: #FFF;
+    color: #fff;
     height: 80%;
     width: 80%;
     max-width: 900px;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     background-color: $primary-color;
   }
- 
-  &__input-wrapper {
 
+  &__input-wrapper {
     width: 100%;
     display: flex;
     align-items: center;
@@ -32,11 +32,11 @@
   }
   &__label {
     width: 70%;
-    font-size: 1.7rem
+    font-size: 1.7rem;
   }
   &__input {
     @include input-styling;
-    
+
     padding: 0%;
     width: 70%;
   }
@@ -45,7 +45,7 @@
     margin: 1rem;
     width: 70%;
   }
-  &__error{
-    font-size: 3rem
+  &__error {
+    font-size: 3rem;
   }
 }

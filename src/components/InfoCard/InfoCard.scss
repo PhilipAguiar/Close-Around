@@ -1,5 +1,5 @@
-@use "../../styles/partials/colors.scss" as *;
-@use "../../styles/partials/mixins.scss" as *;
+@use "../../styles/partials/colors.scss"as *;
+@use "../../styles/partials/mixins.scss"as *;
 
 .event-card {
   text-align: center;
@@ -9,13 +9,15 @@
   align-items: center;
   margin: 0;
   padding: 0 2rem .5rem;
-  word-break: break-all;
+
   &__info-wrapper {
     display: flex;
     align-items: center;
     margin: 0.4rem 0;
+
     &--description {
-      width: 100%;;
+      width: 100%;
+      ;
       flex-direction: column;
     }
   }
@@ -24,21 +26,22 @@
     @include scroll-box-styling;
     display: flex;
     flex-direction: column;
-    height: 150px;
+    height: 100px;
     padding: 0.4rem 0.6rem 0rem;
-    
+
   }
 
   &__list-wrapper {
-   @include scroll-box-styling;
+    @include scroll-box-styling;
+    height: 100px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
     align-items: center;
-   
+
   }
+
   &__list-item {
-    word-break: normal;
     border: $secondary-color solid 2px;
     background-color: $primary-color;
     border-radius: 40px;
@@ -46,7 +49,7 @@
     align-items: center;
     padding: 0.2rem 0.3rem;
     margin: 0.2rem;
-    width:30%;
+    max-width: 37%;
     height: 50px;
   }
 
@@ -54,6 +57,7 @@
     font-size: 1.6rem;
     margin: 0;
   }
+
   &__subheading {
     font-size: 1.4rem;
     font-weight: 700;
@@ -68,26 +72,35 @@
     width: 50px;
     height: 50px;
     border-radius: 40px;
+
     &--submitted {
       width: 35px;
       height: 35px;
     }
   }
+
   &__text {
     margin: 0;
     font-size: 1.3rem;
     font-weight: 400;
+
     &--description {
+
       font-size: 1rem;
       line-height: 1.6rem;
     }
   }
-  &__link{
+
+  &__link {
     color: #ffffff;
   }
-  &__button{
+
+  &__button {
     @include button-styling;
     background-color: $tertiary-color;
     width: 200px;
+  }
+  &__name{
+    padding-right: 4px;
   }
 }

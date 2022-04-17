@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRef } from "react";
 import { Link, useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import FacebookSignIn from "../../components/FacebookSignIn/FacebookSignIn";
 import { useAuth } from "../../contexts/AuthContext";
-import "./Login.scss"
+import "./Login.scss";
 
 function Login() {
   const emailRef = useRef();
@@ -12,10 +12,11 @@ function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const history = useHistory();
+  const { currentUser } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    console.log(currentUser);
     try {
       setError("");
       setLoading(true);
@@ -35,11 +36,13 @@ function Login() {
         <input className="login__input" type="email" name="email" ref={emailRef} />
         <label className="login__label">Password</label>
         <input className="login__input" type="password" name="password" ref={passwordRef} />
-        <button className="login__button" disabled={loading}>Login</button>
-      <FacebookSignIn loading={loading} />
-      <p className="signup__button">
-        Need an account? <Link to={"/signup"}> Please sign up!</Link>
-      </p>
+        <button className="login__button" disabled={loading}>
+          Login
+        </button>
+        <FacebookSignIn loading={loading} />
+        <p className="signup__button">
+          Need an account? <Link to={"/signup"}> Please sign up!</Link>
+        </p>
       </form>
     </div>
   );

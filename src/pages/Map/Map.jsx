@@ -56,6 +56,7 @@ function MapField() {
     if (userLat && userLng) {
       getUserEvents();
       getTicketMasterEvents(testLat, testLng);
+      console.log(currentUser)
     }
   }, []);
 
@@ -102,8 +103,9 @@ function MapField() {
                   } else {
                     res.data._embedded.events.forEach((event, j) => {
                       setTimeout(() => {
-                        let eventLat = Number(event._embedded.venues[0].location.latitude) + (Math.random() - 0.5) / 1500;
-                        let eventLng = Number(event._embedded.venues[0].location.longitude) + (Math.random() - 0.5) / 1500;
+                        let eventLat = Number(event._embedded.venues[0].location.latitude) + (Math.random() - 1) / 1500;
+                        let eventLng = Number(event._embedded.venues[0].location.longitude) + (Math.random() - 1) / 1500;
+
                         const newEvent = {
                           id: event.id,
                           lat: eventLat,
@@ -247,36 +249,38 @@ function MapField() {
   };
 
   const joinEvent = (e, currentEvent) => {
+   
+    console.log(currentUser)
     e.preventDefault();
     const copy = [...eventList];
-    const index = copy.findIndex((event) => currentEvent.id === event.id);
+    const eventIndex = copy.findIndex((event) => currentEvent.id === event.id);
     let newUsersInterested;
 
-    if (!currentUser) {
-      return;
-    } else {
-      if (currentEvent.usersInterested) {
-        if (
-          currentEvent.usersInterested.find((user) => {
-            return user.id === currentUser.uid;
-          })
-        ) {
-          const index = currentEvent.usersInterested.findIndex((user) => user.id === currentUser.uid);
-          if (copy[index].usersInterested) {
-            copy[index].usersInterested.splice(index);
-          }
-        } else {
-          newUsersInterested = [
-            ...copy[index].usersInterested,
-            { name: currentUser.displayName, id: currentUser.uid, userAvatar: currentUser.photoURL },
-          ];
+    if (currentEvent.usersInterested) {
+      if (
+        currentEvent.usersInterested.find((user) => {
+          return user.id === currentUser.uid;
+        })
+      ) {
+        const userIndex = currentEvent.usersInterested.findIndex((user) => user.id === currentUser.uid);
+
+        if (copy[eventIndex].usersInterested) {
+          copy[eventIndex].usersInterested.splice(userIndex, 1);
+
+          newUsersInterested = copy[eventIndex].usersInterested;
         }
       } else {
-        newUsersInterested = [{ name: currentUser.displayName, id: currentUser.uid, userAvatar: currentUser.photoURL }];
+        newUsersInterested = [
+          ...copy[eventIndex].usersInterested,
+          { name: currentUser.displayName, id: currentUser.uid, userAvatar: currentUser.photoURL },
+        ];
       }
+    } else {
+      newUsersInterested = [{ name: currentUser.displayName, id: currentUser.uid, userAvatar: currentUser.photoURL }];
     }
-    copy[index] = {
-      ...copy[index],
+
+    copy[eventIndex] = {
+      ...copy[eventIndex],
       usersInterested: newUsersInterested,
     };
 
@@ -289,18 +293,18 @@ function MapField() {
             return event.id === currentEvent.id;
           })
         ) {
-          copy[index] = { ...copy[index], userSubmitted: "TicketMaster" };
-          userEventUtils.addUserEvent(copy[index]);
+          copy[eventIndex] = { ...copy[eventIndex], userSubmitted: "TicketMaster" };
+          userEventUtils.addUserEvent(copy[eventIndex]);
         } else {
-          userEventUtils.editUserEvent(copy[index]);
+          userEventUtils.editUserEvent(copy[eventIndex]);
         }
       });
     } else {
-      userEventUtils.editUserEvent(copy[index]);
+      userEventUtils.editUserEvent(copy[eventIndex]);
     }
 
     setEventList(copy);
-    setSelected(copy[index]);
+    setSelected(copy[eventIndex]);
   };
 
   const promptLocationChange = () => {
@@ -319,7 +323,7 @@ function MapField() {
       setUserLat(currentLat);
       setUserLng(currentLng);
       getTicketMasterEvents(currentLat, currentLng);
-      getUserEvents()
+      getUserEvents();
       reset();
     }
   };
@@ -342,10 +346,7 @@ function MapField() {
                 getTicketMasterEvents={getTicketMasterEvents}
                 setUserLocation={setUserLocation}
               />
-              <MarkerClusterer
-                maxZoom={15}
-
-              >
+              <MarkerClusterer maxZoom={15}>
                 {(clusterer) =>
                   eventList.map((event, i) => {
                     let iconSize = 30;

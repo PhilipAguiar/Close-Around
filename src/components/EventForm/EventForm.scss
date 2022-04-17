@@ -1,5 +1,6 @@
 @use "../../styles/partials/mixins.scss" as *;
 @use "../../styles/partials/colors.scss" as *;
+
 .event-form {
   display: flex;
   flex-direction: column;
@@ -38,7 +39,6 @@
     height: 1.7rem;
     border-radius: 12px;
     padding: 0.2rem 0.4rem 0.2rem;
-
     width: 80%;
     margin: 0.2rem auto 0.4rem;
     background-color: #f6f8ff;

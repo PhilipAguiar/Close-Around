@@ -16,7 +16,6 @@ export default [
     ],
   },
 
-
   {
     featureType: "administrative.neighborhood",
     elementType: "labels",

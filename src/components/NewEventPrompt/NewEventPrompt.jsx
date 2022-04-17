@@ -7,6 +7,7 @@ function NewEventPrompt({ lat, lng, clickHandler }) {
     <InfoWindow position={{ lat: lat, lng: lng }}>
       <div className="prompt">
         <h4 className="prompt__header">Is this where you want to add your event?</h4>
+
         <div className="prompt__button-wrapper">
           <button className="prompt__button" onClick={() => clickHandler(true)}>
             Yes
@@ -15,6 +16,7 @@ function NewEventPrompt({ lat, lng, clickHandler }) {
             No
           </button>
         </div>
+        
       </div>
     </InfoWindow>
   );
