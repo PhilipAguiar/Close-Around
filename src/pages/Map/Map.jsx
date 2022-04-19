@@ -6,14 +6,14 @@ import mapStyle from "./mapStyles";
 import NewEventPrompt from "../../components/NewEventPrompt/NewEventPrompt";
 import EventForm from "../../components/EventForm/EventForm";
 import InfoCard from "../../components/InfoCard/InfoCard";
-import TicketMasterApiUtils from "../../utils/TicketMasterApi";
-import userEventUtils from "../../utils/UserEvents";
+import userEventUtils from "../../utils/UserEventsApiUtils";
 import FetchLocationModule from "../../components/FetchLocationModule/FetchLocationModule";
 import { useAuth } from "../../contexts/AuthContext";
 import NewLocationPrompt from "../../components/NewLocationPrompt/NewLocationPrompt";
 import Search from "../../components/Search/Search";
 import { useCallback } from "react";
 import LoadingScreen from "../../components/LoadingScreen/LoadingScreen";
+import { getTicketMasterEvents, getUserEvents } from "../../utils/EventUtils";
 
 const libraries = ["places"];
 const mapContainerStyle = {
@@ -34,11 +34,11 @@ function MapField() {
     libraries,
   });
 
-  let testLat = JSON.parse(localStorage.getItem("lat"));
-  let testLng = JSON.parse(localStorage.getItem("lng"));
+  let defaultLat = JSON.parse(localStorage.getItem("lat"));
+  let defaultLng = JSON.parse(localStorage.getItem("lng"));
 
-  const [userLat, setUserLat] = useState(testLat);
-  const [userLng, setUserLng] = useState(testLng);
+  const [userLat, setUserLat] = useState(defaultLat);
+  const [userLng, setUserLng] = useState(defaultLng);
   const [selected, setSelected] = useState(null);
   const [eventList, setEventList] = useState([]);
   const [newEventActive, setNewEventActive] = useState(false);
@@ -52,11 +52,24 @@ function MapField() {
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const { currentUser } = useAuth();
 
+  const handleLoading = (value) => {
+    setLoading(value);
+  };
+
+  const handleShowErrorMessage = (value) => {
+    setShowErrorMessage(value);
+  };
+
+  const addEvent = (event) => {
+    setEventList((prevList) => [...prevList, event]);
+  };
+
   useEffect(() => {
     if (userLat && userLng) {
-      getUserEvents();
-      getTicketMasterEvents(testLat, testLng);
-      console.log(currentUser)
+      getUserEvents(addEvent);
+      getTicketMasterEvents(defaultLat, defaultLng, eventList, addEvent, handleLoading, handleShowErrorMessage);
+      getTicketMasterEvents();
+      console.log(currentUser);
     }
   }, []);
 
@@ -74,108 +87,6 @@ function MapField() {
       setUserLat(Number(JSON.stringify(position.coords.latitude)));
       setUserLng(Number(JSON.stringify(position.coords.longitude)));
     });
-  };
-
-  const getTicketMasterEvents = async (lat, lng) => {
-    // Delay is for ticketmaster api fetch limit
-
-    let apiRequestDelay = 1000;
-    setLoading(true);
-    setShowErrorMessage(false);
-    let lastVenue = false;
-
-    setTimeout(
-      () =>
-        TicketMasterApiUtils.getVenues(lat, lng).then((res) => {
-          apiRequestDelay += 1000;
-
-          res.data.forEach((venue, i) => {
-            setTimeout(() => {
-              if (res.data.length === i + 1) {
-                lastVenue = true;
-              }
-
-              TicketMasterApiUtils.getEventsByVenue(venue.id)
-                .then((res) => {
-                  if (!res.data._embedded) {
-                    setLoading(false);
-                    setShowErrorMessage(true);
-                  } else {
-                    res.data._embedded.events.forEach((event, j) => {
-                      setTimeout(() => {
-                        let eventLat = Number(event._embedded.venues[0].location.latitude) + (Math.random() - 1) / 1500;
-                        let eventLng = Number(event._embedded.venues[0].location.longitude) + (Math.random() - 1) / 1500;
-
-                        const newEvent = {
-                          id: event.id,
-                          lat: eventLat,
-                          lng: eventLng,
-                          icon: "http://localhost:8080/images/ticketmaster-logo.png",
-                          eventName: event.name,
-                          eventDescription: event.url,
-                          eventDate: event.dates.start.localDate,
-                          eventLocation: event._embedded.venues[0].name,
-                          userSubmitted: "TicketMaster",
-                          userAvatar: event.images[0].url,
-                          usersInterested: [],
-                        };
-
-                        let repeatEvent = eventList.find((prevEvent) => prevEvent.id === event.id);
-
-                        userEventUtils
-                          .getUserEvents()
-                          .then((res) => {
-                            res.data.forEach((userEvent) => {
-                              if (event.id === userEvent.id) {
-                                repeatEvent = true;
-                              }
-                            });
-                          })
-                          .then(() => {
-                            if (!repeatEvent) {
-                              setEventList((prevList) => [...prevList, newEvent]);
-                            }
-
-                            if (lastVenue === true && j + 1 === res.data._embedded.events.length) {
-                              setTimeout(() => {
-                                setLoading(false);
-                              }, 4000);
-                            }
-                          });
-                      }, 1000 * j);
-                    });
-                  }
-                })
-                .catch((e) => console.log(e));
-            }, apiRequestDelay * i);
-          });
-        }),
-      apiRequestDelay
-    );
-  };
-
-  const getUserEvents = () => {
-    userEventUtils.getUserEvents().then((res) =>
-      res.data.forEach((event) => {
-        setEventList((prevList) => [
-          ...prevList,
-          {
-            id: event.id,
-            lat: event.lat,
-            lng: event.lng,
-            icon: event.icon,
-            eventName: event.eventName,
-            eventDescription: event.eventDescription,
-            eventDate: event.eventDate,
-            eventLocation: event.eventLocation,
-            userSubmitted: event.userSubmitted,
-            userAvatar: event.userAvatar,
-            eventSize: event.eventSize,
-            usersInterested: event.usersInterested,
-          },
-        ]);
-      })
-    );
   };
 
   const reset = () => {
@@ -249,8 +160,7 @@ function MapField() {
   };
 
   const joinEvent = (e, currentEvent) => {
-   
-    console.log(currentUser)
+    console.log(currentUser);
     e.preventDefault();
     const copy = [...eventList];
     const eventIndex = copy.findIndex((event) => currentEvent.id === event.id);
@@ -306,6 +216,7 @@ function MapField() {
     setEventList(copy);
     setSelected(copy[eventIndex]);
   };
+  
 
   const promptLocationChange = () => {
     reset();
