@@ -68,7 +68,6 @@ function MapField() {
     if (userLat && userLng) {
       getUserEvents(addEvent);
       getTicketMasterEvents(defaultLat, defaultLng, eventList, addEvent, handleLoading, handleShowErrorMessage);
-      getTicketMasterEvents();
       console.log(currentUser);
     }
   }, []);
