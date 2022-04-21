@@ -13,17 +13,33 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const history = useHistory();
   const { currentUser } = useAuth();
+  const [emailError, setEmailError] = useState(error);
+  const [passwordError, setPasswordError] = useState(error);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(currentUser);
-    try {
-      setError("");
-      setLoading(true);
-      await login(emailRef.current.value, passwordRef.current.value);
-      history.push("/map");
-    } catch {
-      setError("Failed to Login");
+
+    if (!emailRef.current.value) {
+      setEmailError(true);
+    } else {
+      setEmailError(false);
+    }
+    if (!passwordRef.current.value) {
+      setPasswordError(true);
+    } else {
+      setPasswordError(false);
+    }
+
+    if (emailRef.current.value && passwordRef.current.value) {
+      try {
+        setError("");
+        setLoading(true);
+        await login(emailRef.current.value, passwordRef.current.value);
+        history.push("/map");
+      } catch {
+        setError("Failed to Login");
+      }
     }
     setLoading(false);
   };
@@ -33,9 +49,9 @@ function Login() {
       <form className="login__form" onSubmit={handleSubmit}>
         {error && <p className="login__error">{error}</p>}
         <label className="login__label">Email</label>
-        <input className="login__input" type="email" name="email" ref={emailRef} />
+        <input className={`signup__input ${emailError && "signup__input--error"}`} type="email" name="email" ref={emailRef} />
         <label className="login__label">Password</label>
-        <input className="login__input" type="password" name="password" ref={passwordRef} />
+        <input className={`signup__input ${passwordError && "signup__input--error"}`} type="password" name="password" ref={passwordRef} />
         <button className="login__button" disabled={loading}>
           Login
         </button>

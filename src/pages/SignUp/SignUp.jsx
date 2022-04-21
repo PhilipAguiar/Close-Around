@@ -58,8 +58,6 @@ function SignUp() {
 
     // Error Checking
 
-   
-
     if (nameRef.current.value && emailRef.current.value && passwordRef.current.value && confirmRef.current.value) {
       try {
         signup(emailRef.current.value, passwordRef.current.value).then(() => {
