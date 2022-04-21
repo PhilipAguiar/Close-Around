@@ -66,11 +66,19 @@ function MapField() {
 
   useEffect(() => {
     if (userLat && userLng) {
-      getUserEvents(addEvent);
-      getTicketMasterEvents(defaultLat, defaultLng, eventList, addEvent, handleLoading, handleShowErrorMessage);
+      loadUserEvents();
+      loadTicketMasterEvents(defaultLat.defaultLng)
       console.log(currentUser);
     }
   }, []);
+
+  const loadTicketMasterEvents = (lat,lng) =>{
+    getTicketMasterEvents(lat, lng, eventList, addEvent, handleLoading, handleShowErrorMessage);
+  }
+
+  const loadUserEvents = () =>{
+    getUserEvents(addEvent);
+  }
 
   const panTo = useCallback(({ lat, lng }, zoom) => {
     mapRef.current.panTo({ lat, lng });
@@ -232,14 +240,16 @@ function MapField() {
     if (response === true) {
       setUserLat(currentLat);
       setUserLng(currentLng);
-      getTicketMasterEvents(currentLat, currentLng);
-      getUserEvents();
+      loadTicketMasterEvents(currentLat, currentLng);
+      loadUserEvents();
       reset();
     }
   };
 
   if (!JSON.parse(localStorage.getItem("lat")) || !JSON.parse(localStorage.getItem("lng"))) {
-    return <FetchLocationModule clickHandler={getLocation} getTicketMasterEvents={getTicketMasterEvents}></FetchLocationModule>;
+    return <FetchLocationModule clickHandler={getLocation} loadTicketMasterEvents={loadTicketMasterEvents}
+    loadUserEvents = {loadUserEvents}
+    ></FetchLocationModule>;
   }
 
   return (
@@ -253,7 +263,7 @@ function MapField() {
                 userLat={userLat}
                 userLng={userLng}
                 panTo={panTo}
-                getTicketMasterEvents={getTicketMasterEvents}
+                loadTicketMasterEvents={loadTicketMasterEvents}
                 setUserLocation={setUserLocation}
               />
               <MarkerClusterer maxZoom={15}>

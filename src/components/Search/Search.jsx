@@ -5,7 +5,7 @@ import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption 
 import "@reach/combobox/styles.css";
 import { v4 as uuidv4 } from "uuid";
 
-function Search({ userLat, userLng, panTo, getTicketMasterEvents, setUserLocation }) {
+function Search({ userLat, userLng, panTo, loadTicketMasterEvents, setUserLocation }) {
   const {
     ready,
     value,
@@ -31,10 +31,10 @@ function Search({ userLat, userLng, panTo, getTicketMasterEvents, setUserLocatio
 
             setUserLocation(lat, lng);
             if (results[0].types.find((locale) => locale === "political")) {
-              getTicketMasterEvents(lat, lng);
+              loadTicketMasterEvents(lat, lng);
               panTo({ lat, lng }, 10);
             } else {
-              getTicketMasterEvents(lat, lng);
+              loadTicketMasterEvents(lat, lng);
               panTo({ lat, lng }, 14);
             }
           } catch {

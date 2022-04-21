@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import "./FetchLocationModule.scss";
-function FetchLocationModule({ clickHandler, getTicketMasterEvents }) {
+function FetchLocationModule({ clickHandler, loadTicketMasterEvents,loadUserEvents }) {
   const [loading, setLoading] = useState(false);
   return (
     <div className="fetch-location">
@@ -14,7 +14,8 @@ function FetchLocationModule({ clickHandler, getTicketMasterEvents }) {
           let checkForLocalStorage = setInterval(() => {
             if (!JSON.parse(localStorage.getItem("lat")) && !JSON.parse(localStorage.getItem("lng"))) {
             } else {
-              getTicketMasterEvents(Number(JSON.parse(localStorage.getItem("lat"))), Number(JSON.parse(localStorage.getItem("lng"))));
+              loadTicketMasterEvents(Number(JSON.parse(localStorage.getItem("lat"))), Number(JSON.parse(localStorage.getItem("lng"))));
+              loadUserEvents()
               clearInterval(checkForLocalStorage);
             }
           }, 1000);
