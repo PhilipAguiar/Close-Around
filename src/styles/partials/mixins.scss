@@ -71,6 +71,11 @@
   margin: 0 auto;
   background-color: #f6f8ff;
   border: $primary-color 2px solid;
+  
+  &--error{
+    border-color: red;
+
+  }
 }
 
 @mixin scroll-box-styling {
