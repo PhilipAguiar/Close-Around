@@ -1,5 +1,5 @@
-@use "../../styles/partials/mixins.scss" as *;
-@use "../../styles/partials/colors.scss" as *;
+@use "../../styles/partials/mixins.scss"as *;
+@use "../../styles/partials/colors.scss"as *;
 
 .event-form {
   display: flex;
@@ -25,6 +25,7 @@
     height: 100%;
     padding-top: 2rem;
   }
+
   &__input-section {
     display: flex;
     flex-direction: column;
@@ -67,11 +68,13 @@
     justify-content: center;
     height: 100%;
   }
+
   &__icon {
     cursor: pointer;
     width: 22%;
     margin: 0.15rem 0.3rem;
   }
+
   &__heading {
     margin: 0 0 0.8rem;
     color: #fff;

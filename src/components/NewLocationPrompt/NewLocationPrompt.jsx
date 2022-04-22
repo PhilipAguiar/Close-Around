@@ -1,6 +1,7 @@
 import React from "react";
 import "./NewLocationPrompt.scss";
 import { InfoWindow } from "@react-google-maps/api";
+
 function NewLocationPrompt({ lat, lng, clickHandler }) {
   return (
     <InfoWindow position={{ lat: lat, lng: lng }}>

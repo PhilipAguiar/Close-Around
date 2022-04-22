@@ -4,6 +4,8 @@ import "./InfoCard.scss";
 import { useAuth } from "../../contexts/AuthContext";
 import { Link } from "react-router-dom";
 
+// react-google-maps npm package requires some css properties as javascript
+
 const options = {
   boxStyle: {
     display: "flex",
@@ -15,13 +17,14 @@ const options = {
     border: "7px solid #1d63ae",
     maxWidth: "400px",
     maxHeight: "700px",
-    overflowY:"scroll",
-
+    overflowY: "scroll",
   },
   margin: "0",
   alignBottom: true,
   closeBoxURL: "",
 };
+
+// Convert data into more user friendly format
 
 const convertDate = (dateString) => {
   let splitDate = dateString.split("-");
@@ -33,6 +36,8 @@ function InfoCard({ event, clickHandler }) {
   const { currentUser } = useAuth();
   let fromEventApi = false;
   let numUsersInterested = 0;
+
+  // state to change button text depending on if user has joined event
 
   let userJoinedEvent = false;
 
@@ -68,7 +73,7 @@ function InfoCard({ event, clickHandler }) {
         <div className="event-card__info-wrapper event-card__info-wrapper--description">
           <h3 className="event-card__subheading">Event Description: </h3>
           <div className="event-card__description-container">
-            {/* Check if from Api so description will be a link */}
+            {/* Check if event is from an external api so description will be a link */}
             {fromEventApi ? (
               <a className="event-card__link event-card__info-wrapper--description" target="_blank" rel="noreferrer" href={event.eventDescription}>
                 <p className="event-card__text event-card__text--description">{event.eventDescription}</p>

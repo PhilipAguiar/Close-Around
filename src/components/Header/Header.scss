@@ -1,5 +1,6 @@
-@use "../../styles/partials/mixins.scss" as *;
-@use "../../styles/partials/colors.scss" as *;
+@use "../../styles/partials/mixins.scss"as *;
+@use "../../styles/partials/colors.scss"as *;
+
 .header {
   height: 3.5rem;
   display: flex;
@@ -7,14 +8,15 @@
   padding: 0 1.5rem;
   align-items: center;
   background: $secondary-color;
-  background: linear-gradient(90deg,$secondary-color 23%, $primary-color 91%, $primary-color 100%);
+  background: linear-gradient(90deg, $secondary-color 23%, $primary-color 91%, $primary-color 100%);
 
   &__button {
     @include button-styling;
     width: 100px;
     margin-left: 2rem;
   }
-  &__logo{
+
+  &__logo {
     cursor: pointer;
     height: 2rem;
   }

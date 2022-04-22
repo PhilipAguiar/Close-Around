@@ -1,6 +1,7 @@
 import React from "react";
 import "./LoadingScreen.scss";
 import loading from "../../assets/loading.gif";
+
 function LoadingScreen() {
   return (
     <div className="loading">

@@ -13,8 +13,8 @@ function Home() {
 
   return (
     <section className="home">
+      
       <div className="home__hero home__hero--toronto">
-
         {!whatActive && !howActive && !joinActive && (
           <>
             <div className="home__text-wrapper">
@@ -87,7 +87,7 @@ function Home() {
           <p className="home__heading">How does it work?</p>
           <p className="home__hover">Hover Me!</p>
         </div>
-        
+
         <div
           className="home__card"
           onMouseEnter={() => {

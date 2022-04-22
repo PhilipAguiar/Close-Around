@@ -31,6 +31,8 @@ function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Form Validation
+
     if (!nameRef.current.value) {
       setNameError(true);
     } else {
@@ -69,7 +71,6 @@ function SignUp() {
                   photoURL: res,
                 })
                 .then(() => {
-                  console.log(currentUser);
                   history.push("/map");
                 });
             });

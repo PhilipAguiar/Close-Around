@@ -1,18 +1,21 @@
-@use "../../styles/partials/mixins.scss" as *;
-@use "../../styles/partials/colors.scss" as *;
+@use "../../styles/partials/mixins.scss"as *;
+@use "../../styles/partials/colors.scss"as *;
 
 .home {
   background-color: $secondary-color;
   height: 100%;
+
   &__hero {
     height: 60%;
     width: 100%;
     background-color: #ffffff;
-    &--toronto{
+
+    &--toronto {
       background-image: url(../../assets/toronto.png);
       background-position: center;
     }
   }
+
   &__info-section {
     display: flex;
     justify-content: space-around;
@@ -22,21 +25,24 @@
     margin: auto;
     background-color: $secondary-color;
   }
-  &__card{
+
+  &__card {
     display: flex;
     flex-direction: column;
-    
+
     height: 60%;
     width: 300px;
     border-radius: 30px;
     background-color: #ffffff;
   }
-  &__hero{
+
+  &__hero {
     display: flex;
     align-items: center;
     justify-content: space-around;
   }
-  &__text-wrapper{
+
+  &__text-wrapper {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -45,32 +51,38 @@
     border-radius: 40px;
     border: $secondary-color 4px solid;
   }
-  &__image{
+
+  &__image {
     height: 400px;
     width: 600px;
   }
-  &__image-2{
+
+  &__image-2 {
     height: 500px;
     width: 350px;
   }
-  &__image-3{
+
+  &__image-3 {
     height: 475px;
     width: 300px;
   }
-  &__image-4{
+
+  &__image-4 {
     height: 500px;
     width: 350px;
   }
 
-  &__heading{
+  &__heading {
     font-size: 1.5rem;
     margin: 1rem 0 2rem;
   }
-  &__subheading{
+
+  &__subheading {
     font-size: 1.3rem;
 
   }
-  &__hover{
+
+  &__hover {
     margin-bottom: 2.5rem;
     color: rgb(96, 96, 96);
   }

@@ -6,11 +6,14 @@ import { useAuth } from "../../contexts/AuthContext";
 import logo from "../../assets/facebookLogo.png";
 
 function FacebookSignIn({ loading, signup }) {
+
   const history = useHistory();
   const { currentUser } = useAuth();
+
   const facebookSignup = () => {
     const auth = getAuth();
     const provider = new FacebookAuthProvider();
+
     signInWithPopup(auth, provider)
       .then((result) => {
         // The signed-in user info.
@@ -32,7 +35,6 @@ function FacebookSignIn({ loading, signup }) {
         const errorEmail = error.email;
         // The AuthCredential type that was used.
         const credential = FacebookAuthProvider.credentialFromError(error);
-        console.log(errorCode, errorMessage, errorEmail, credential);
 
         // ...
       });

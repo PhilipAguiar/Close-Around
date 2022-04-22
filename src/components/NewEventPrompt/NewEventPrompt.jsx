@@ -16,7 +16,6 @@ function NewEventPrompt({ lat, lng, clickHandler }) {
             No
           </button>
         </div>
-        
       </div>
     </InfoWindow>
   );

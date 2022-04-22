@@ -166,7 +166,6 @@ function MapField() {
   };
 
   const joinEvent = (e, currentEvent) => {
-    console.log(currentUser);
     e.preventDefault();
     const copy = [...eventList];
     const eventIndex = copy.findIndex((event) => currentEvent.id === event.id);

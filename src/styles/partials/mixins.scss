@@ -1,4 +1,4 @@
-@use "colors" as *;
+@use "colors"as *;
 
 @mixin button-styling {
   backface-visibility: hidden;
@@ -71,8 +71,8 @@
   margin: 0 auto;
   background-color: #f6f8ff;
   border: $primary-color 2px solid;
-  
-  &--error{
+
+  &--error {
     border-color: red;
 
   }
@@ -97,9 +97,11 @@
     color: #0088ae;
     background-color: #0088ae;
   }
+
   &::-webkit-scrollbar-track {
     background-color: $secondary-color;
   }
+
   &::-webkit-scrollbar-thumb {
     margin: auto;
     border-radius: 30px;

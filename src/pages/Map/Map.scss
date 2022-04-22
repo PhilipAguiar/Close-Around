@@ -1,4 +1,4 @@
-@use "../../styles/partials/mixins.scss" as *;
+@use "../../styles/partials/mixins.scss"as *;
 
 .wrapper {
   display: flex;
@@ -29,6 +29,7 @@
     width: 200px;
     margin-left: 5rem;
   }
+
   &__change-button {
     @extend .map-field__add-button;
   }
@@ -40,6 +41,7 @@
     bottom: 1rem;
     margin: auto;
   }
+
   &__question {
     position: absolute;
     font-size: 2rem;

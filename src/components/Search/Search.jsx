@@ -13,6 +13,7 @@ function Search({ userLat, userLng, panTo, loadTicketMasterEvents, setUserLocati
     setValue,
     clearSuggestions,
   } = usePlacesAutocomplete({
+    // Search options are sorted by places near current location
     requestOptions: {
       location: { lat: () => userLat, lng: () => userLng },
       radius: "20000",
@@ -30,6 +31,9 @@ function Search({ userLat, userLng, panTo, loadTicketMasterEvents, setUserLocati
             const { lat, lng } = await getLatLng(results[0]);
 
             setUserLocation(lat, lng);
+
+            // Sets different pan depending on if address or city/country
+
             if (results[0].types.find((locale) => locale === "political")) {
               loadTicketMasterEvents(lat, lng);
               panTo({ lat, lng }, 10);

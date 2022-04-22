@@ -23,6 +23,9 @@ import volleyballIcon from "../../assets/icons/volleyball.svg";
 import React from "react";
 
 function EventForm({ submitHandler, selectIcon }) {
+
+// User selects icon by clicking an icon
+
   const clickHandler = (e) => {
     selectIcon(e.target.src);
   };
@@ -31,6 +34,7 @@ function EventForm({ submitHandler, selectIcon }) {
     <div className="event-form">
       <form className="event-form__container" onSubmit={submitHandler}>
         <div className="event-form__wrapper">
+
           <div className="event-form__input-section">
             <label className="event-form__label">What's Happening</label>
             <input className="event-form__input" name="event" />
@@ -56,6 +60,7 @@ function EventForm({ submitHandler, selectIcon }) {
             <input type="number" min="1" className="event-form__input" name="size" />
           </div>
         </div>
+
         <div className="event-form__icon-section">
           <p className="event-form__heading">Choose your icon</p>
 
@@ -101,6 +106,7 @@ function EventForm({ submitHandler, selectIcon }) {
             <img src={volleyballIcon} onClick={clickHandler} className="event-form__icon" alt="volleybal" />
           </div>
         </div>
+        
         <button className="event-form__button">Submit</button>
       </form>
     </div>
