@@ -35,7 +35,7 @@ export const getTicketMasterEvents = async (lat, lng, eventList, addEvent, handl
                         id: event.id,
                         lat: eventLat,
                         lng: eventLng,
-                        icon: "https://close-around-api.herokuapp.com/images/ticketmaster-logo.png",
+                        icon: "http://localhost:8080/images/ticketmaster-logo.png",
                         eventName: event.name,
                         eventDescription: event.url,
                         eventDate: event.dates.start.localDate,

@@ -123,7 +123,7 @@ function MapField() {
   const formSubmit = (e) => {
     e.preventDefault();
 
-    let userPhoto = "https://close-around-api.herokuapp.com/images/default-user.svg";
+    let userPhoto = "http://localhost:8080/images/default-user.svg";
 
     if (currentUser.photoURL) {
       userPhoto = currentUser.photoURL;
