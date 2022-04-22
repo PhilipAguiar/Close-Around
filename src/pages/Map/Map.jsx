@@ -67,8 +67,7 @@ function MapField() {
   useEffect(() => {
     if (userLat && userLng) {
       loadUserEvents();
-      loadTicketMasterEvents(defaultLat.defaultLng)
-      console.log(currentUser);
+      loadTicketMasterEvents(defaultLat,defaultLng)
     }
   }, []);
 
