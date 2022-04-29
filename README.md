@@ -26,23 +26,13 @@ Close around is a platform for people to see whats going around in their neighbo
 
 
 <!-- GETTING STARTED -->
-## Getting Started
 
-To get started with this application make sure you have both the front end (https://github.com/PhilipAguiar/Close-Around) and back-end repositories (https://github.com/PhilipAguiar/Close-Around-api)
 
-### Prerequisites
 
-1) Install all dependencies using npm i on both front and back end repos.
-
-2) Install additional package on api repository - npm install pm2
-
-3) Npm start on front end and pm2 start app.js when ready ro run application
 
 ### Installation
 
 1. Create a google maps api key at [https://console.cloud.google.com/projectselector2/google/maps-apis/credentials](https://console.cloud.google.com/projectselector2/google/maps-apis/credentials)
-
-Instructors can use default in .env
 
 <!-- USAGE EXAMPLES -->
 ## Usage
