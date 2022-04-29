@@ -14,6 +14,7 @@ import Search from "../../components/Search/Search";
 import { useCallback } from "react";
 import LoadingScreen from "../../components/LoadingScreen/LoadingScreen";
 import { getTicketMasterEvents, getUserEvents } from "../../utils/EventUtils";
+import userImage from "../../assets/default-user.svg"
 
 const libraries = ["places"];
 const mapContainerStyle = {
@@ -122,7 +123,7 @@ function MapField() {
   const formSubmit = (e) => {
     e.preventDefault();
 
-    let userPhoto = "http://localhost:8080/images/default-user.svg";
+    let userPhoto = userImage;
 
     if (currentUser.photoURL) {
       userPhoto = currentUser.photoURL;

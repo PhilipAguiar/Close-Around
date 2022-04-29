@@ -23,4 +23,8 @@ const ticketmasterRoute = require('./routes/ticketmaster');
 app.use('/ticketmaster', ticketmasterRoute);
 const eventRoute = require('./routes/events');
 app.use('/events', eventRoute);
+<<<<<<< HEAD
+=======
+console.log("test")
+>>>>>>> firebase-function
 exports.app = functions.https.onRequest(app);

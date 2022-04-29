@@ -1,5 +1,7 @@
 import TicketMasterApiUtils from "./TicketMasterApiUtils";
 import userEventUtils from "./UserEventsApiUtils";
+import tmLogo from "../assets/ticketmaster-logo.png"
+const BASE_URL = "https://close-around-dev.web.app";
 
 export const getTicketMasterEvents = async (lat, lng, eventList, addEvent, handleLoading, handleShowErrorMessage) => {
   // Delay is for ticketmaster api fetch limit
@@ -35,7 +37,7 @@ export const getTicketMasterEvents = async (lat, lng, eventList, addEvent, handl
                         id: event.id,
                         lat: eventLat,
                         lng: eventLng,
-                        icon: "http://localhost:8080/images/ticketmaster-logo.png",
+                        icon: tmLogo,
                         eventName: event.name,
                         eventDescription: event.url,
                         eventDate: event.dates.start.localDate,

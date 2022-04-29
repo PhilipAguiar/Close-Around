@@ -20,7 +20,10 @@ router.get("/:id", (req, res) => {
       res.status(200).json(axiosRes.data);
     });
   } catch {
+<<<<<<< HEAD
     console.log("error");
+=======
+>>>>>>> firebase-function
     res.status(500).json("error receiving ticketmaster data");
   }
 });
