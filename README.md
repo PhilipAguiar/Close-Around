@@ -1,6 +1,8 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
+www.CloseAround.com
+
 Close around is a platform for people to see whats going around in their neighborhood from professional events to a local pickup game at the park. Just enter your location and the application does the rest!
 
 ![ScreenShot](./src/assets/example.png)
