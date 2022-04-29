@@ -69,7 +69,6 @@ function MapField() {
     if (userLat && userLng) {
       loadUserEvents();
       loadTicketMasterEvents(defaultLat,defaultLng)
-      console.log(currentUser);
     }
   }, []);
 
@@ -168,7 +167,6 @@ function MapField() {
   };
 
   const joinEvent = (e, currentEvent) => {
-    console.log(currentUser);
     e.preventDefault();
     const copy = [...eventList];
     const eventIndex = copy.findIndex((event) => currentEvent.id === event.id);

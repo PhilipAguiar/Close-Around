@@ -20,7 +20,6 @@ router.get("/:id", (req, res) => {
       res.status(200).json(axiosRes.data);
     });
   } catch {
-    console.log("error");
     res.status(500).json("error receiving ticketmaster data");
   }
 });

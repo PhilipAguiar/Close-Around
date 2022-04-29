@@ -24,7 +24,6 @@ export const getTicketMasterEvents = async (lat, lng, eventList, addEvent, handl
 
             TicketMasterApiUtils.getEventsByVenue(venue.id)
               .then((res) => {
-                console.log(res.data)
                 if (!res.data._embedded) {
                   handleLoading(false);
                   handleShowErrorMessage(true);

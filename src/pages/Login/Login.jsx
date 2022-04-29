@@ -18,7 +18,6 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(currentUser);
 
     if (!emailRef.current.value) {
       setEmailError(true);
