@@ -18,11 +18,8 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-<<<<<<< HEAD
 
     // Form Validation
-=======
->>>>>>> firebase-function
 
     if (!emailRef.current.value) {
       setEmailError(true);
