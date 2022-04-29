@@ -1,0 +1,28 @@
+{
+  "hosting": {
+    "public": "build",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      {
+        "source": "/events",
+        "function": "app"
+      },
+      {
+        "source": "/events/**",
+        "function": "app"
+      },
+      {
+        "source": "/ticketmaster",
+        "function": "app"
+      },
+      {
+        "source": "/ticketmaster/**",
+        "function": "app"
+      },
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

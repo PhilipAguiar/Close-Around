@@ -1,8 +1,10 @@
 import axios from "axios";
 
+const BASE_URL = "https://close-around-dev.web.app"
+
 export default {
-  getUserEvents: () => axios.get(`http://localhost:8080/events`),
-  addUserEvent: (event) =>axios.post(`http://localhost:8080/events`,{
+  getUserEvents: () => axios.get(`${BASE_URL}/events`),
+  addUserEvent: (event) =>axios.post(`${BASE_URL}/events`,{
     id:event.id,
     lat: event.lat,
     lng: event.lng,
@@ -16,7 +18,7 @@ export default {
     eventSize: event.eventSize,
     usersInterested: event.usersInterested
   }),
-  editUserEvent: (event) =>axios.post(`http://localhost:8080/events/${event.id}/edit`,{
+  editUserEvent: (event) =>axios.post(`${BASE_URL}/events/${event.id}/edit`,{
     id:event.id,
     lat: event.lat,
     lng: event.lng,

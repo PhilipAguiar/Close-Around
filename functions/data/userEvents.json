@@ -1,0 +1,38 @@
+[
+  {
+    "id": "449d9f5c-4d0d-4b21-a614-69bbe193665e",
+    "lat": 43.66601963890114,
+    "lng": -79.35013381075252,
+    "icon": "https://close-around-dev.web.app/static/media/paint.88d08dc876e372d9c4cf9569eeeb4c56.svg",
+    "eventName": "Paint Night!",
+    "eventDescription": "Come on down to the Magic Moose!\n\nLearn how to paint your own masterpiece and socialize.\n\n All supplies include.\n\nFood & drinks available on location.",
+    "eventDate": "2022-04-10",
+    "eventLocation": "756 Magic Ave",
+    "userSubmitted": "The Magic Moose",
+    "userAvatar": "https://images.unsplash.com/photo-1543007630-9710e4a00a20?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+    "eventSize": 20,
+    "usersInterested": [
+      {
+        "name": "Nora Hutton",
+        "id": "rtJLoptp2kfIP9owyDhVBlbBzD83",
+        "userAvatar": "https://images.unsplash.com/photo-1601288496920-b6154fe3626a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
+      },
+      {
+        "name": "Robert Rowe",
+        "id": "rtJLoptp2kfIP9owyDhVBlbBzD83",
+        "userAvatar": "https://images.unsplash.com/photo-1545167622-3a6ac756afa4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=824&q=80"
+      },
+      {
+        "name": "Melissa Fogarty",
+        "id": "rtJLoptp2kfIP9owyDhVBlbBzD83",
+        "userAvatar": "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"
+      },
+      {
+        "name": "Ted Mabaso",
+        "id": "rtJLoptp2kfIP9owyDhVBlbBzD83",
+        "userAvatar": "https://images.unsplash.com/photo-1590038767624-dac5740a997b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
+      },
+      { "name": "Philip Aguiar", "id": "9soGK6HuEfapUtcXlvX3NDEde3H3", "userAvatar": "https://graph.facebook.com/10224445961270072/picture" }
+    ]
+  }
+]
